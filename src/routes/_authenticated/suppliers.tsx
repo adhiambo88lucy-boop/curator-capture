@@ -20,6 +20,7 @@ function SuppliersPage() {
   const [creating, setCreating] = useState(false);
   const [draft, setDraft] = useState({
     name: "", contact_person: "", phone: "", wechat: "",
+    country: "", province: "", city: "",
     market: "", building: "", floor: "", booth: "", notes: "",
   });
 
@@ -28,7 +29,7 @@ function SuppliersPage() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("suppliers")
-        .select("id,name,market,building,floor,booth,contact_person,phone,wechat,status,notes")
+        .select("id,name,country,province,city,market,building,floor,booth,contact_person,phone,wechat,status,notes")
         .order("name");
       if (error) throw error;
       return data ?? [];
@@ -43,6 +44,9 @@ function SuppliersPage() {
         contact_person: draft.contact_person || null,
         phone: draft.phone || null,
         wechat: draft.wechat || null,
+        country: draft.country || null,
+        province: draft.province || null,
+        city: draft.city || null,
         market: draft.market || null,
         building: draft.building || null,
         floor: draft.floor || null,
@@ -55,7 +59,7 @@ function SuppliersPage() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["suppliers"] });
       setCreating(false);
-      setDraft({ name: "", contact_person: "", phone: "", wechat: "", market: "", building: "", floor: "", booth: "", notes: "" });
+      setDraft({ name: "", contact_person: "", phone: "", wechat: "", country: "", province: "", city: "", market: "", building: "", floor: "", booth: "", notes: "" });
       toast.success("Supplier added");
     },
     onError: (e) => toast.error((e as Error).message),
@@ -88,6 +92,9 @@ function SuppliersPage() {
             <Field label="Contact"><Input value={draft.contact_person} onChange={(e) => setDraft({ ...draft, contact_person: e.target.value })} /></Field>
             <Field label="Phone"><Input value={draft.phone} onChange={(e) => setDraft({ ...draft, phone: e.target.value })} /></Field>
             <Field label="WeChat"><Input value={draft.wechat} onChange={(e) => setDraft({ ...draft, wechat: e.target.value })} /></Field>
+            <Field label="Country"><Input value={draft.country} onChange={(e) => setDraft({ ...draft, country: e.target.value })} placeholder="China" /></Field>
+            <Field label="Province"><Input value={draft.province} onChange={(e) => setDraft({ ...draft, province: e.target.value })} placeholder="Guangdong" /></Field>
+            <Field label="City"><Input value={draft.city} onChange={(e) => setDraft({ ...draft, city: e.target.value })} placeholder="Guangzhou" /></Field>
             <Field label="Market"><Input value={draft.market} onChange={(e) => setDraft({ ...draft, market: e.target.value })} /></Field>
             <Field label="Building"><Input value={draft.building} onChange={(e) => setDraft({ ...draft, building: e.target.value })} /></Field>
             <Field label="Floor"><Input value={draft.floor} onChange={(e) => setDraft({ ...draft, floor: e.target.value })} /></Field>
@@ -111,7 +118,7 @@ function SuppliersPage() {
               <div className="min-w-0">
                 <div className="font-medium text-foreground">{s.name}</div>
                 <div className="mt-0.5 text-[11px] text-muted-foreground">
-                  {[s.market, s.building, s.floor, s.booth].filter(Boolean).join(" · ") || "—"}
+                  {[s.country, s.province, s.city, s.market, s.building, s.floor, s.booth].filter(Boolean).join(" · ") || "—"}
                 </div>
                 {(s.contact_person || s.phone || s.wechat) && (
                   <div className="mt-1 text-[11px] text-muted-foreground">

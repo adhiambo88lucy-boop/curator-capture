@@ -1,4 +1,4 @@
-import { createFileRoute, useRouter } from "@tanstack/react-router";
+import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -32,7 +32,7 @@ function AuthPage() {
       const { error } = await fn;
       if (error) throw error;
       toast.success(mode === "signin" ? "Signed in" : "Account created");
-      router.navigate({ to: "/" });
+      router.navigate({ to: "/sessions" });
     } catch (err) {
       toast.error((err as Error).message);
     } finally {
@@ -51,28 +51,15 @@ function AuthPage() {
             Curator Console
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Sign in to capture products from the field.
+            Internal team — capture products from the field.
           </p>
         </div>
         <form onSubmit={submit} className="space-y-4 rounded-2xl border border-border bg-card p-6 shadow-sm">
           <Field label="Email" required>
-            <Input
-              type="email"
-              required
-              autoComplete="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+            <Input type="email" required autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} />
           </Field>
           <Field label="Password" required>
-            <Input
-              type="password"
-              required
-              minLength={6}
-              autoComplete={mode === "signin" ? "current-password" : "new-password"}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            <Input type="password" required minLength={6} autoComplete={mode === "signin" ? "current-password" : "new-password"} value={password} onChange={(e) => setPassword(e.target.value)} />
           </Field>
           <AppButton type="submit" size="lg" className="w-full" disabled={busy}>
             {busy ? "Please wait…" : mode === "signin" ? "Sign in" : "Create account"}
@@ -82,11 +69,15 @@ function AuthPage() {
             onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
             className="w-full text-center text-xs text-muted-foreground hover:text-foreground"
           >
-            {mode === "signin"
-              ? "New team member? Create an account"
-              : "Already registered? Sign in"}
+            {mode === "signin" ? "New team member? Create an account" : "Already registered? Sign in"}
           </button>
         </form>
+        <div className="mt-6 text-center text-xs text-muted-foreground">
+          Buyer looking to shop?{" "}
+          <Link to="/market/auth" className="font-medium text-foreground underline">
+            Go to marketplace sign in
+          </Link>
+        </div>
       </div>
     </div>
   );
