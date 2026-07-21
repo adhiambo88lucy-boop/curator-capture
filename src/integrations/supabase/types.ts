@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      buyer_profiles: {
+        Row: {
+          business_name: string | null
+          city: string | null
+          contact_name: string | null
+          country: string | null
+          created_at: string
+          id: string
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          business_name?: string | null
+          city?: string | null
+          contact_name?: string | null
+          country?: string | null
+          created_at?: string
+          id: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          business_name?: string | null
+          city?: string | null
+          contact_name?: string | null
+          country?: string | null
+          created_at?: string
+          id?: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       capture_sessions: {
         Row: {
           created_at: string
@@ -58,12 +91,108 @@ export type Database = {
           },
         ]
       }
+      categories: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          slug: string
+          sort_order: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          slug: string
+          sort_order?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          slug?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
+      favorites: {
+        Row: {
+          created_at: string
+          id: string
+          product_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          product_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          product_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "favorites_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      group_buy_reservations: {
+        Row: {
+          buyer_id: string
+          created_at: string
+          id: string
+          listing_id: string
+          notes: string | null
+          quantity: number
+          status: Database["public"]["Enums"]["reservation_status"]
+          updated_at: string
+        }
+        Insert: {
+          buyer_id: string
+          created_at?: string
+          id?: string
+          listing_id: string
+          notes?: string | null
+          quantity: number
+          status?: Database["public"]["Enums"]["reservation_status"]
+          updated_at?: string
+        }
+        Update: {
+          buyer_id?: string
+          created_at?: string
+          id?: string
+          listing_id?: string
+          notes?: string | null
+          quantity?: number
+          status?: Database["public"]["Enums"]["reservation_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_buy_reservations_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       listings: {
         Row: {
           available_qty: number | null
           code: string
           created_at: string
           created_by: string | null
+          group_buy_deadline: string | null
+          group_buy_enabled: boolean
           id: string
           moq: number | null
           product_id: string
@@ -77,6 +206,8 @@ export type Database = {
           code?: string
           created_at?: string
           created_by?: string | null
+          group_buy_deadline?: string | null
+          group_buy_enabled?: boolean
           id?: string
           moq?: number | null
           product_id: string
@@ -90,6 +221,8 @@ export type Database = {
           code?: string
           created_at?: string
           created_by?: string | null
+          group_buy_deadline?: string | null
+          group_buy_enabled?: boolean
           id?: string
           moq?: number | null
           product_id?: string
@@ -228,15 +361,18 @@ export type Database = {
         Row: {
           capture_session_id: string | null
           category: string
+          category_id: string | null
           created_at: string
           created_by: string | null
           description: string | null
           discovery_date: string
           id: string
           internal_code: string
+          internal_notes: string | null
           material: string | null
           name: string
           status: Database["public"]["Enums"]["product_status"]
+          subcategory_id: string | null
           supplier_id: string | null
           tags: string[]
           updated_at: string
@@ -244,15 +380,18 @@ export type Database = {
         Insert: {
           capture_session_id?: string | null
           category: string
+          category_id?: string | null
           created_at?: string
           created_by?: string | null
           description?: string | null
           discovery_date?: string
           id?: string
           internal_code?: string
+          internal_notes?: string | null
           material?: string | null
           name: string
           status?: Database["public"]["Enums"]["product_status"]
+          subcategory_id?: string | null
           supplier_id?: string | null
           tags?: string[]
           updated_at?: string
@@ -260,15 +399,18 @@ export type Database = {
         Update: {
           capture_session_id?: string | null
           category?: string
+          category_id?: string | null
           created_at?: string
           created_by?: string | null
           description?: string | null
           discovery_date?: string
           id?: string
           internal_code?: string
+          internal_notes?: string | null
           material?: string | null
           name?: string
           status?: Database["public"]["Enums"]["product_status"]
+          subcategory_id?: string | null
           supplier_id?: string | null
           tags?: string[]
           updated_at?: string
@@ -282,6 +424,20 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "products_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "products_subcategory_id_fkey"
+            columns: ["subcategory_id"]
+            isOneToOne: false
+            referencedRelation: "subcategories"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "products_supplier_id_fkey"
             columns: ["supplier_id"]
             isOneToOne: false
@@ -290,11 +446,48 @@ export type Database = {
           },
         ]
       }
+      subcategories: {
+        Row: {
+          category_id: string
+          created_at: string
+          id: string
+          name: string
+          slug: string
+          sort_order: number
+        }
+        Insert: {
+          category_id: string
+          created_at?: string
+          id?: string
+          name: string
+          slug: string
+          sort_order?: number
+        }
+        Update: {
+          category_id?: string
+          created_at?: string
+          id?: string
+          name?: string
+          slug?: string
+          sort_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subcategories_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       suppliers: {
         Row: {
           booth: string | null
           building: string | null
+          city: string | null
           contact_person: string | null
+          country: string | null
           created_at: string
           created_by: string | null
           floor: string | null
@@ -303,6 +496,7 @@ export type Database = {
           name: string
           notes: string | null
           phone: string | null
+          province: string | null
           status: Database["public"]["Enums"]["supplier_status"]
           updated_at: string
           wechat: string | null
@@ -310,7 +504,9 @@ export type Database = {
         Insert: {
           booth?: string | null
           building?: string | null
+          city?: string | null
           contact_person?: string | null
+          country?: string | null
           created_at?: string
           created_by?: string | null
           floor?: string | null
@@ -319,6 +515,7 @@ export type Database = {
           name: string
           notes?: string | null
           phone?: string | null
+          province?: string | null
           status?: Database["public"]["Enums"]["supplier_status"]
           updated_at?: string
           wechat?: string | null
@@ -326,7 +523,9 @@ export type Database = {
         Update: {
           booth?: string | null
           building?: string | null
+          city?: string | null
           contact_person?: string | null
+          country?: string | null
           created_at?: string
           created_by?: string | null
           floor?: string | null
@@ -335,9 +534,31 @@ export type Database = {
           name?: string
           notes?: string | null
           phone?: string | null
+          province?: string | null
           status?: Database["public"]["Enums"]["supplier_status"]
           updated_at?: string
           wechat?: string | null
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
         }
         Relationships: []
       }
@@ -346,9 +567,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_group_buy_progress: { Args: { _listing_id: string }; Returns: number }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
+      app_role: "admin" | "buyer"
       listing_publish_status: "draft" | "published" | "archived"
       media_kind: "photo" | "video"
       product_status:
@@ -357,6 +586,7 @@ export type Database = {
         | "draft"
         | "published"
         | "archived"
+      reservation_status: "pending" | "confirmed" | "cancelled"
       session_status: "active" | "ended"
       supplier_status: "active" | "inactive" | "blacklisted"
     }
@@ -486,6 +716,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      app_role: ["admin", "buyer"],
       listing_publish_status: ["draft", "published", "archived"],
       media_kind: ["photo", "video"],
       product_status: [
@@ -495,6 +726,7 @@ export const Constants = {
         "published",
         "archived",
       ],
+      reservation_status: ["pending", "confirmed", "cancelled"],
       session_status: ["active", "ended"],
       supplier_status: ["active", "inactive", "blacklisted"],
     },

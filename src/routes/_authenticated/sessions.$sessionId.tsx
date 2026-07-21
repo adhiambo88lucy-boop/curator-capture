@@ -1,12 +1,11 @@
-import { createFileRoute, Link, useNavigate, useRouter } from "@tanstack/react-router";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { AppShell } from "@/components/AppShell";
 import { AppButton } from "@/components/AppButton";
 import { StatusPill } from "@/components/StatusPill";
 import { formatRelative, formatTime } from "@/lib/format";
 import { Plus, StopCircle } from "lucide-react";
-import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/sessions/$sessionId")({
   component: SessionDetail,
@@ -15,8 +14,6 @@ export const Route = createFileRoute("/_authenticated/sessions/$sessionId")({
 function SessionDetail() {
   const { sessionId } = Route.useParams();
   const navigate = useNavigate();
-  const router = useRouter();
-  const qc = useQueryClient();
 
   const { data: session, isLoading } = useQuery({
     queryKey: ["session", sessionId],
@@ -44,22 +41,6 @@ function SessionDetail() {
     },
   });
 
-  const end = useMutation({
-    mutationFn: async () => {
-      const { error } = await supabase
-        .from("capture_sessions")
-        .update({ status: "ended", ended_at: new Date().toISOString() })
-        .eq("id", sessionId);
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      toast.success("Session ended");
-      qc.invalidateQueries({ queryKey: ["session", sessionId] });
-      qc.invalidateQueries({ queryKey: ["sessions"] });
-      router.navigate({ to: "/sessions" });
-    },
-    onError: (e) => toast.error((e as Error).message),
-  });
 
   if (isLoading) return <AppShell title="Session"><div className="text-sm text-muted-foreground">Loading…</div></AppShell>;
   if (!session) return <AppShell title="Session" back="/sessions"><div>Session not found.</div></AppShell>;
@@ -115,10 +96,7 @@ function SessionDetail() {
           <AppButton
             size="xl"
             variant="outline"
-            onClick={() => {
-              if (confirm("End this capture session?")) end.mutate();
-            }}
-            disabled={end.isPending}
+            onClick={() => navigate({ to: "/sessions/$sessionId/review", params: { sessionId } })}
           >
             <StopCircle className="h-5 w-5" />
           </AppButton>

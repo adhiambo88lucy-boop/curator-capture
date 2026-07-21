@@ -10,18 +10,30 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as MarketRouteRouteImport } from './routes/market/route'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as MarketIndexRouteImport } from './routes/market/index'
+import { Route as MarketFavoritesRouteImport } from './routes/market/favorites'
+import { Route as MarketBrowseRouteImport } from './routes/market/browse'
+import { Route as MarketAuthRouteImport } from './routes/market/auth'
 import { Route as AuthenticatedSuppliersRouteImport } from './routes/_authenticated/suppliers'
 import { Route as AuthenticatedSessionsRouteImport } from './routes/_authenticated/sessions'
 import { Route as AuthenticatedProductsRouteImport } from './routes/_authenticated/products'
+import { Route as MarketProductProductIdRouteImport } from './routes/market/product.$productId'
 import { Route as AuthenticatedSessionsSessionIdRouteImport } from './routes/_authenticated/sessions.$sessionId'
 import { Route as AuthenticatedProductsProductIdRouteImport } from './routes/_authenticated/products.$productId'
+import { Route as AuthenticatedSessionsSessionIdReviewRouteImport } from './routes/_authenticated/sessions.$sessionId.review'
 import { Route as AuthenticatedSessionsSessionIdNewProductRouteImport } from './routes/_authenticated/sessions.$sessionId.new-product'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MarketRouteRoute = MarketRouteRouteImport.update({
+  id: '/market',
+  path: '/market',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
@@ -32,6 +44,26 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const MarketIndexRoute = MarketIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => MarketRouteRoute,
+} as any)
+const MarketFavoritesRoute = MarketFavoritesRouteImport.update({
+  id: '/favorites',
+  path: '/favorites',
+  getParentRoute: () => MarketRouteRoute,
+} as any)
+const MarketBrowseRoute = MarketBrowseRouteImport.update({
+  id: '/browse',
+  path: '/browse',
+  getParentRoute: () => MarketRouteRoute,
+} as any)
+const MarketAuthRoute = MarketAuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => MarketRouteRoute,
 } as any)
 const AuthenticatedSuppliersRoute = AuthenticatedSuppliersRouteImport.update({
   id: '/suppliers',
@@ -48,6 +80,11 @@ const AuthenticatedProductsRoute = AuthenticatedProductsRouteImport.update({
   path: '/products',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const MarketProductProductIdRoute = MarketProductProductIdRouteImport.update({
+  id: '/product/$productId',
+  path: '/product/$productId',
+  getParentRoute: () => MarketRouteRoute,
+} as any)
 const AuthenticatedSessionsSessionIdRoute =
   AuthenticatedSessionsSessionIdRouteImport.update({
     id: '/$sessionId',
@@ -60,6 +97,12 @@ const AuthenticatedProductsProductIdRoute =
     path: '/$productId',
     getParentRoute: () => AuthenticatedProductsRoute,
   } as any)
+const AuthenticatedSessionsSessionIdReviewRoute =
+  AuthenticatedSessionsSessionIdReviewRouteImport.update({
+    id: '/review',
+    path: '/review',
+    getParentRoute: () => AuthenticatedSessionsSessionIdRoute,
+  } as any)
 const AuthenticatedSessionsSessionIdNewProductRoute =
   AuthenticatedSessionsSessionIdNewProductRouteImport.update({
     id: '/new-product',
@@ -69,13 +112,20 @@ const AuthenticatedSessionsSessionIdNewProductRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/market': typeof MarketRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/products': typeof AuthenticatedProductsRouteWithChildren
   '/sessions': typeof AuthenticatedSessionsRouteWithChildren
   '/suppliers': typeof AuthenticatedSuppliersRoute
+  '/market/auth': typeof MarketAuthRoute
+  '/market/browse': typeof MarketBrowseRoute
+  '/market/favorites': typeof MarketFavoritesRoute
+  '/market/': typeof MarketIndexRoute
   '/products/$productId': typeof AuthenticatedProductsProductIdRoute
   '/sessions/$sessionId': typeof AuthenticatedSessionsSessionIdRouteWithChildren
+  '/market/product/$productId': typeof MarketProductProductIdRoute
   '/sessions/$sessionId/new-product': typeof AuthenticatedSessionsSessionIdNewProductRoute
+  '/sessions/$sessionId/review': typeof AuthenticatedSessionsSessionIdReviewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -83,33 +133,53 @@ export interface FileRoutesByTo {
   '/products': typeof AuthenticatedProductsRouteWithChildren
   '/sessions': typeof AuthenticatedSessionsRouteWithChildren
   '/suppliers': typeof AuthenticatedSuppliersRoute
+  '/market/auth': typeof MarketAuthRoute
+  '/market/browse': typeof MarketBrowseRoute
+  '/market/favorites': typeof MarketFavoritesRoute
+  '/market': typeof MarketIndexRoute
   '/products/$productId': typeof AuthenticatedProductsProductIdRoute
   '/sessions/$sessionId': typeof AuthenticatedSessionsSessionIdRouteWithChildren
+  '/market/product/$productId': typeof MarketProductProductIdRoute
   '/sessions/$sessionId/new-product': typeof AuthenticatedSessionsSessionIdNewProductRoute
+  '/sessions/$sessionId/review': typeof AuthenticatedSessionsSessionIdReviewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/market': typeof MarketRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/_authenticated/products': typeof AuthenticatedProductsRouteWithChildren
   '/_authenticated/sessions': typeof AuthenticatedSessionsRouteWithChildren
   '/_authenticated/suppliers': typeof AuthenticatedSuppliersRoute
+  '/market/auth': typeof MarketAuthRoute
+  '/market/browse': typeof MarketBrowseRoute
+  '/market/favorites': typeof MarketFavoritesRoute
+  '/market/': typeof MarketIndexRoute
   '/_authenticated/products/$productId': typeof AuthenticatedProductsProductIdRoute
   '/_authenticated/sessions/$sessionId': typeof AuthenticatedSessionsSessionIdRouteWithChildren
+  '/market/product/$productId': typeof MarketProductProductIdRoute
   '/_authenticated/sessions/$sessionId/new-product': typeof AuthenticatedSessionsSessionIdNewProductRoute
+  '/_authenticated/sessions/$sessionId/review': typeof AuthenticatedSessionsSessionIdReviewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/market'
     | '/auth'
     | '/products'
     | '/sessions'
     | '/suppliers'
+    | '/market/auth'
+    | '/market/browse'
+    | '/market/favorites'
+    | '/market/'
     | '/products/$productId'
     | '/sessions/$sessionId'
+    | '/market/product/$productId'
     | '/sessions/$sessionId/new-product'
+    | '/sessions/$sessionId/review'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -117,25 +187,39 @@ export interface FileRouteTypes {
     | '/products'
     | '/sessions'
     | '/suppliers'
+    | '/market/auth'
+    | '/market/browse'
+    | '/market/favorites'
+    | '/market'
     | '/products/$productId'
     | '/sessions/$sessionId'
+    | '/market/product/$productId'
     | '/sessions/$sessionId/new-product'
+    | '/sessions/$sessionId/review'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/market'
     | '/auth'
     | '/_authenticated/products'
     | '/_authenticated/sessions'
     | '/_authenticated/suppliers'
+    | '/market/auth'
+    | '/market/browse'
+    | '/market/favorites'
+    | '/market/'
     | '/_authenticated/products/$productId'
     | '/_authenticated/sessions/$sessionId'
+    | '/market/product/$productId'
     | '/_authenticated/sessions/$sessionId/new-product'
+    | '/_authenticated/sessions/$sessionId/review'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  MarketRouteRoute: typeof MarketRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
 }
 
@@ -146,6 +230,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/market': {
+      id: '/market'
+      path: '/market'
+      fullPath: '/market'
+      preLoaderRoute: typeof MarketRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -161,6 +252,34 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/market/': {
+      id: '/market/'
+      path: '/'
+      fullPath: '/market/'
+      preLoaderRoute: typeof MarketIndexRouteImport
+      parentRoute: typeof MarketRouteRoute
+    }
+    '/market/favorites': {
+      id: '/market/favorites'
+      path: '/favorites'
+      fullPath: '/market/favorites'
+      preLoaderRoute: typeof MarketFavoritesRouteImport
+      parentRoute: typeof MarketRouteRoute
+    }
+    '/market/browse': {
+      id: '/market/browse'
+      path: '/browse'
+      fullPath: '/market/browse'
+      preLoaderRoute: typeof MarketBrowseRouteImport
+      parentRoute: typeof MarketRouteRoute
+    }
+    '/market/auth': {
+      id: '/market/auth'
+      path: '/auth'
+      fullPath: '/market/auth'
+      preLoaderRoute: typeof MarketAuthRouteImport
+      parentRoute: typeof MarketRouteRoute
     }
     '/_authenticated/suppliers': {
       id: '/_authenticated/suppliers'
@@ -183,6 +302,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProductsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/market/product/$productId': {
+      id: '/market/product/$productId'
+      path: '/product/$productId'
+      fullPath: '/market/product/$productId'
+      preLoaderRoute: typeof MarketProductProductIdRouteImport
+      parentRoute: typeof MarketRouteRoute
+    }
     '/_authenticated/sessions/$sessionId': {
       id: '/_authenticated/sessions/$sessionId'
       path: '/$sessionId'
@@ -196,6 +322,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/products/$productId'
       preLoaderRoute: typeof AuthenticatedProductsProductIdRouteImport
       parentRoute: typeof AuthenticatedProductsRoute
+    }
+    '/_authenticated/sessions/$sessionId/review': {
+      id: '/_authenticated/sessions/$sessionId/review'
+      path: '/review'
+      fullPath: '/sessions/$sessionId/review'
+      preLoaderRoute: typeof AuthenticatedSessionsSessionIdReviewRouteImport
+      parentRoute: typeof AuthenticatedSessionsSessionIdRoute
     }
     '/_authenticated/sessions/$sessionId/new-product': {
       id: '/_authenticated/sessions/$sessionId/new-product'
@@ -222,12 +355,15 @@ const AuthenticatedProductsRouteWithChildren =
 
 interface AuthenticatedSessionsSessionIdRouteChildren {
   AuthenticatedSessionsSessionIdNewProductRoute: typeof AuthenticatedSessionsSessionIdNewProductRoute
+  AuthenticatedSessionsSessionIdReviewRoute: typeof AuthenticatedSessionsSessionIdReviewRoute
 }
 
 const AuthenticatedSessionsSessionIdRouteChildren: AuthenticatedSessionsSessionIdRouteChildren =
   {
     AuthenticatedSessionsSessionIdNewProductRoute:
       AuthenticatedSessionsSessionIdNewProductRoute,
+    AuthenticatedSessionsSessionIdReviewRoute:
+      AuthenticatedSessionsSessionIdReviewRoute,
   }
 
 const AuthenticatedSessionsSessionIdRouteWithChildren =
@@ -264,21 +400,32 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface MarketRouteRouteChildren {
+  MarketAuthRoute: typeof MarketAuthRoute
+  MarketBrowseRoute: typeof MarketBrowseRoute
+  MarketFavoritesRoute: typeof MarketFavoritesRoute
+  MarketIndexRoute: typeof MarketIndexRoute
+  MarketProductProductIdRoute: typeof MarketProductProductIdRoute
+}
+
+const MarketRouteRouteChildren: MarketRouteRouteChildren = {
+  MarketAuthRoute: MarketAuthRoute,
+  MarketBrowseRoute: MarketBrowseRoute,
+  MarketFavoritesRoute: MarketFavoritesRoute,
+  MarketIndexRoute: MarketIndexRoute,
+  MarketProductProductIdRoute: MarketProductProductIdRoute,
+}
+
+const MarketRouteRouteWithChildren = MarketRouteRoute._addFileChildren(
+  MarketRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  MarketRouteRoute: MarketRouteRouteWithChildren,
   AuthRoute: AuthRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

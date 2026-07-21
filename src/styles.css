@@ -31,7 +31,7 @@
   --color-ring: var(--ring);
   --color-success: var(--success);
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Poppins", "Inter", ui-sans-serif, system-ui, sans-serif;
 }
 
 :root {
