@@ -43,8 +43,8 @@ export function BusinessShell({ title, children }: { title: string; children: Re
             {TABS.map((t) => (
               <Link
                 key={t.to}
-                to={t.to}
-                activeOptions={{ exact: t.exact }}
+                to={t.to as never}
+                activeOptions={{ exact: t.exact ?? false }}
                 className="whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-muted"
                 activeProps={{ className: "whitespace-nowrap rounded-full bg-foreground px-3 py-1.5 text-xs font-medium text-background" }}
               >
