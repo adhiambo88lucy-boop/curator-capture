@@ -24,7 +24,7 @@ function BusinessHome() {
       </p>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {CARDS.map((c) => (
-          <Link key={c.to} to={c.to} className="group rounded-2xl border border-border bg-card p-5 transition hover:border-foreground/40 hover:shadow-sm">
+          <Link key={c.to} to={c.to as never} className="group rounded-2xl border border-border bg-card p-5 transition hover:border-foreground/40 hover:shadow-sm">
             <c.icon className="h-6 w-6 text-foreground" />
             <div className="mt-4 font-semibold text-foreground">{c.title}</div>
             <div className="mt-1 text-xs text-muted-foreground">{c.desc}</div>
