@@ -1,5 +1,5 @@
 import { Link, useRouter } from "@tanstack/react-router";
-import { Home, Package, Users, LogOut, PlayCircle } from "lucide-react";
+import { Home, Package, Users, LogOut, PlayCircle, Briefcase } from "lucide-react";
 import type { ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -56,11 +56,12 @@ export function AppShell({ title, action, children, back }: AppShellProps) {
       </header>
       <main className="mx-auto max-w-2xl px-4 py-5">{children}</main>
       <nav className="fixed inset-x-0 bottom-0 z-20 border-t border-border bg-background/95 backdrop-blur">
-        <div className="mx-auto grid max-w-2xl grid-cols-4">
+        <div className="mx-auto grid max-w-2xl grid-cols-5">
           <NavBtn to="/" icon={<Home className="h-5 w-5" />} label="Home" exact />
           <NavBtn to="/sessions" icon={<PlayCircle className="h-5 w-5" />} label="Sessions" />
           <NavBtn to="/products" icon={<Package className="h-5 w-5" />} label="Products" />
           <NavBtn to="/suppliers" icon={<Users className="h-5 w-5" />} label="Suppliers" />
+          <NavBtn to="/business" icon={<Briefcase className="h-5 w-5" />} label="Business" />
         </div>
       </nav>
     </div>

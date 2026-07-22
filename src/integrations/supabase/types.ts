@@ -14,6 +14,66 @@ export type Database = {
   }
   public: {
     Tables: {
+      app_settings: {
+        Row: {
+          description: string | null
+          key: string
+          updated_at: string
+          updated_by: string | null
+          value: Json
+        }
+        Insert: {
+          description?: string | null
+          key: string
+          updated_at?: string
+          updated_by?: string | null
+          value: Json
+        }
+        Update: {
+          description?: string | null
+          key?: string
+          updated_at?: string
+          updated_by?: string | null
+          value?: Json
+        }
+        Relationships: []
+      }
+      audit_log: {
+        Row: {
+          action: string
+          actor: string | null
+          created_at: string
+          entity_id: string | null
+          entity_type: string | null
+          id: string
+          module: string
+          next: Json | null
+          previous: Json | null
+        }
+        Insert: {
+          action: string
+          actor?: string | null
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          module: string
+          next?: Json | null
+          previous?: Json | null
+        }
+        Update: {
+          action?: string
+          actor?: string | null
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          module?: string
+          next?: Json | null
+          previous?: Json | null
+        }
+        Relationships: []
+      }
       buyer_profiles: {
         Row: {
           business_name: string | null
@@ -114,6 +174,74 @@ export type Database = {
           sort_order?: number
         }
         Relationships: []
+      }
+      currencies: {
+        Row: {
+          active: boolean
+          code: string
+          created_at: string
+          name: string
+          symbol: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          code: string
+          created_at?: string
+          name: string
+          symbol: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          code?: string
+          created_at?: string
+          name?: string
+          symbol?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      exchange_rates: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          currency_code: string
+          effective_at: string
+          id: string
+          margin_pct: number
+          notes: string | null
+          rate_to_rmb: number
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          currency_code: string
+          effective_at?: string
+          id?: string
+          margin_pct?: number
+          notes?: string | null
+          rate_to_rmb: number
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          currency_code?: string
+          effective_at?: string
+          id?: string
+          margin_pct?: number
+          notes?: string | null
+          rate_to_rmb?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exchange_rates_currency_code_fkey"
+            columns: ["currency_code"]
+            isOneToOne: false
+            referencedRelation: "currencies"
+            referencedColumns: ["code"]
+          },
+        ]
       }
       favorites: {
         Row: {
@@ -328,6 +456,44 @@ export type Database = {
           },
         ]
       }
+      product_pricing_overrides: {
+        Row: {
+          fixed_price_customer: number | null
+          group_buy_fee_pct: number | null
+          markup_pct: number | null
+          notes: string | null
+          product_id: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          fixed_price_customer?: number | null
+          group_buy_fee_pct?: number | null
+          markup_pct?: number | null
+          notes?: string | null
+          product_id: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          fixed_price_customer?: number | null
+          group_buy_fee_pct?: number | null
+          markup_pct?: number | null
+          notes?: string | null
+          product_id?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_pricing_overrides_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: true
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       product_sizes: {
         Row: {
           id: string
@@ -376,6 +542,7 @@ export type Database = {
           supplier_id: string | null
           tags: string[]
           updated_at: string
+          weight_kg: number | null
         }
         Insert: {
           capture_session_id?: string | null
@@ -395,6 +562,7 @@ export type Database = {
           supplier_id?: string | null
           tags?: string[]
           updated_at?: string
+          weight_kg?: number | null
         }
         Update: {
           capture_session_id?: string | null
@@ -414,6 +582,7 @@ export type Database = {
           supplier_id?: string | null
           tags?: string[]
           updated_at?: string
+          weight_kg?: number | null
         }
         Relationships: [
           {
@@ -442,6 +611,86 @@ export type Database = {
             columns: ["supplier_id"]
             isOneToOne: false
             referencedRelation: "suppliers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      shipping_companies: {
+        Row: {
+          active: boolean
+          created_at: string
+          id: string
+          internal_notes: string | null
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          internal_notes?: string | null
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          internal_notes?: string | null
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      shipping_rates: {
+        Row: {
+          active: boolean
+          company_id: string
+          created_at: string
+          est_days_max: number | null
+          est_days_min: number | null
+          id: string
+          internal_notes: string | null
+          method: string
+          rate: number
+          unit: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          active?: boolean
+          company_id: string
+          created_at?: string
+          est_days_max?: number | null
+          est_days_min?: number | null
+          id?: string
+          internal_notes?: string | null
+          method: string
+          rate: number
+          unit?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          active?: boolean
+          company_id?: string
+          created_at?: string
+          est_days_max?: number | null
+          est_days_min?: number | null
+          id?: string
+          internal_notes?: string | null
+          method?: string
+          rate?: number
+          unit?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shipping_rates_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "shipping_companies"
             referencedColumns: ["id"]
           },
         ]
@@ -567,6 +816,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      apply_rounding: {
+        Args: { _mode: string; _value: number }
+        Returns: number
+      }
+      calculate_listing_price: {
+        Args: { _currency?: string; _listing_id: string }
+        Returns: Json
+      }
       get_group_buy_progress: { Args: { _listing_id: string }; Returns: number }
       has_role: {
         Args: {
