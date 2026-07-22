@@ -94,10 +94,9 @@ export async function loadSettings(): Promise<Record<string, unknown>> {
 
 /** Convenience wrapper around the canonical SQL pricing function. */
 export async function calculateListingPrice(listingId: string, currency?: string) {
-  const { data, error } = await supabase.rpc("calculate_listing_price", {
-    _listing_id: listingId,
-    _currency: currency ?? null,
-  });
+  const args: { _listing_id: string; _currency?: string } = { _listing_id: listingId };
+  if (currency) args._currency = currency;
+  const { data, error } = await supabase.rpc("calculate_listing_price", args);
   if (error) throw error;
   return data as Record<string, number | string | boolean>;
 }
