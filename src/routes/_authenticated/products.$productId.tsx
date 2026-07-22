@@ -9,6 +9,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Plus, X, Upload, Trash2, Check } from "lucide-react";
 import { uploadMedia, signedUrl, removeMedia } from "@/lib/media";
+import { PricingPreview } from "@/components/PricingPreview";
 
 export const Route = createFileRoute("/_authenticated/products/$productId")({
   component: ProductEditor,
