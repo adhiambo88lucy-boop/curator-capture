@@ -3,7 +3,7 @@ import { ArrowLeft, LogOut } from "lucide-react";
 import type { ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
-const TABS = [
+const TABS: { to: string; label: string; exact?: boolean }[] = [
   { to: "/business", label: "Home", exact: true },
   { to: "/business/pricing", label: "Pricing" },
   { to: "/business/currency", label: "Currency" },
@@ -11,7 +11,7 @@ const TABS = [
   { to: "/business/rules", label: "Rules" },
   { to: "/business/profit", label: "Profit" },
   { to: "/business/audit", label: "Audit" },
-] as const;
+];
 
 export function BusinessShell({ title, children }: { title: string; children: ReactNode }) {
   const router = useRouter();

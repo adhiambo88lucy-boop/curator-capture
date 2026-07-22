@@ -20,9 +20,16 @@ import { Route as MarketAuthRouteImport } from './routes/market/auth'
 import { Route as AuthenticatedSuppliersRouteImport } from './routes/_authenticated/suppliers'
 import { Route as AuthenticatedSessionsRouteImport } from './routes/_authenticated/sessions'
 import { Route as AuthenticatedProductsRouteImport } from './routes/_authenticated/products'
+import { Route as AuthenticatedBusinessIndexRouteImport } from './routes/_authenticated/business/index'
 import { Route as MarketProductProductIdRouteImport } from './routes/market/product.$productId'
 import { Route as AuthenticatedSessionsSessionIdRouteImport } from './routes/_authenticated/sessions.$sessionId'
 import { Route as AuthenticatedProductsProductIdRouteImport } from './routes/_authenticated/products.$productId'
+import { Route as AuthenticatedBusinessShippingRouteImport } from './routes/_authenticated/business/shipping'
+import { Route as AuthenticatedBusinessRulesRouteImport } from './routes/_authenticated/business/rules'
+import { Route as AuthenticatedBusinessProfitRouteImport } from './routes/_authenticated/business/profit'
+import { Route as AuthenticatedBusinessPricingRouteImport } from './routes/_authenticated/business/pricing'
+import { Route as AuthenticatedBusinessCurrencyRouteImport } from './routes/_authenticated/business/currency'
+import { Route as AuthenticatedBusinessAuditRouteImport } from './routes/_authenticated/business/audit'
 import { Route as AuthenticatedSessionsSessionIdReviewRouteImport } from './routes/_authenticated/sessions.$sessionId.review'
 import { Route as AuthenticatedSessionsSessionIdNewProductRouteImport } from './routes/_authenticated/sessions.$sessionId.new-product'
 
@@ -80,6 +87,12 @@ const AuthenticatedProductsRoute = AuthenticatedProductsRouteImport.update({
   path: '/products',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedBusinessIndexRoute =
+  AuthenticatedBusinessIndexRouteImport.update({
+    id: '/business/',
+    path: '/business/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const MarketProductProductIdRoute = MarketProductProductIdRouteImport.update({
   id: '/product/$productId',
   path: '/product/$productId',
@@ -96,6 +109,42 @@ const AuthenticatedProductsProductIdRoute =
     id: '/$productId',
     path: '/$productId',
     getParentRoute: () => AuthenticatedProductsRoute,
+  } as any)
+const AuthenticatedBusinessShippingRoute =
+  AuthenticatedBusinessShippingRouteImport.update({
+    id: '/business/shipping',
+    path: '/business/shipping',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedBusinessRulesRoute =
+  AuthenticatedBusinessRulesRouteImport.update({
+    id: '/business/rules',
+    path: '/business/rules',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedBusinessProfitRoute =
+  AuthenticatedBusinessProfitRouteImport.update({
+    id: '/business/profit',
+    path: '/business/profit',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedBusinessPricingRoute =
+  AuthenticatedBusinessPricingRouteImport.update({
+    id: '/business/pricing',
+    path: '/business/pricing',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedBusinessCurrencyRoute =
+  AuthenticatedBusinessCurrencyRouteImport.update({
+    id: '/business/currency',
+    path: '/business/currency',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedBusinessAuditRoute =
+  AuthenticatedBusinessAuditRouteImport.update({
+    id: '/business/audit',
+    path: '/business/audit',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedSessionsSessionIdReviewRoute =
   AuthenticatedSessionsSessionIdReviewRouteImport.update({
@@ -121,9 +170,16 @@ export interface FileRoutesByFullPath {
   '/market/browse': typeof MarketBrowseRoute
   '/market/favorites': typeof MarketFavoritesRoute
   '/market/': typeof MarketIndexRoute
+  '/business/audit': typeof AuthenticatedBusinessAuditRoute
+  '/business/currency': typeof AuthenticatedBusinessCurrencyRoute
+  '/business/pricing': typeof AuthenticatedBusinessPricingRoute
+  '/business/profit': typeof AuthenticatedBusinessProfitRoute
+  '/business/rules': typeof AuthenticatedBusinessRulesRoute
+  '/business/shipping': typeof AuthenticatedBusinessShippingRoute
   '/products/$productId': typeof AuthenticatedProductsProductIdRoute
   '/sessions/$sessionId': typeof AuthenticatedSessionsSessionIdRouteWithChildren
   '/market/product/$productId': typeof MarketProductProductIdRoute
+  '/business/': typeof AuthenticatedBusinessIndexRoute
   '/sessions/$sessionId/new-product': typeof AuthenticatedSessionsSessionIdNewProductRoute
   '/sessions/$sessionId/review': typeof AuthenticatedSessionsSessionIdReviewRoute
 }
@@ -137,9 +193,16 @@ export interface FileRoutesByTo {
   '/market/browse': typeof MarketBrowseRoute
   '/market/favorites': typeof MarketFavoritesRoute
   '/market': typeof MarketIndexRoute
+  '/business/audit': typeof AuthenticatedBusinessAuditRoute
+  '/business/currency': typeof AuthenticatedBusinessCurrencyRoute
+  '/business/pricing': typeof AuthenticatedBusinessPricingRoute
+  '/business/profit': typeof AuthenticatedBusinessProfitRoute
+  '/business/rules': typeof AuthenticatedBusinessRulesRoute
+  '/business/shipping': typeof AuthenticatedBusinessShippingRoute
   '/products/$productId': typeof AuthenticatedProductsProductIdRoute
   '/sessions/$sessionId': typeof AuthenticatedSessionsSessionIdRouteWithChildren
   '/market/product/$productId': typeof MarketProductProductIdRoute
+  '/business': typeof AuthenticatedBusinessIndexRoute
   '/sessions/$sessionId/new-product': typeof AuthenticatedSessionsSessionIdNewProductRoute
   '/sessions/$sessionId/review': typeof AuthenticatedSessionsSessionIdReviewRoute
 }
@@ -156,9 +219,16 @@ export interface FileRoutesById {
   '/market/browse': typeof MarketBrowseRoute
   '/market/favorites': typeof MarketFavoritesRoute
   '/market/': typeof MarketIndexRoute
+  '/_authenticated/business/audit': typeof AuthenticatedBusinessAuditRoute
+  '/_authenticated/business/currency': typeof AuthenticatedBusinessCurrencyRoute
+  '/_authenticated/business/pricing': typeof AuthenticatedBusinessPricingRoute
+  '/_authenticated/business/profit': typeof AuthenticatedBusinessProfitRoute
+  '/_authenticated/business/rules': typeof AuthenticatedBusinessRulesRoute
+  '/_authenticated/business/shipping': typeof AuthenticatedBusinessShippingRoute
   '/_authenticated/products/$productId': typeof AuthenticatedProductsProductIdRoute
   '/_authenticated/sessions/$sessionId': typeof AuthenticatedSessionsSessionIdRouteWithChildren
   '/market/product/$productId': typeof MarketProductProductIdRoute
+  '/_authenticated/business/': typeof AuthenticatedBusinessIndexRoute
   '/_authenticated/sessions/$sessionId/new-product': typeof AuthenticatedSessionsSessionIdNewProductRoute
   '/_authenticated/sessions/$sessionId/review': typeof AuthenticatedSessionsSessionIdReviewRoute
 }
@@ -175,9 +245,16 @@ export interface FileRouteTypes {
     | '/market/browse'
     | '/market/favorites'
     | '/market/'
+    | '/business/audit'
+    | '/business/currency'
+    | '/business/pricing'
+    | '/business/profit'
+    | '/business/rules'
+    | '/business/shipping'
     | '/products/$productId'
     | '/sessions/$sessionId'
     | '/market/product/$productId'
+    | '/business/'
     | '/sessions/$sessionId/new-product'
     | '/sessions/$sessionId/review'
   fileRoutesByTo: FileRoutesByTo
@@ -191,9 +268,16 @@ export interface FileRouteTypes {
     | '/market/browse'
     | '/market/favorites'
     | '/market'
+    | '/business/audit'
+    | '/business/currency'
+    | '/business/pricing'
+    | '/business/profit'
+    | '/business/rules'
+    | '/business/shipping'
     | '/products/$productId'
     | '/sessions/$sessionId'
     | '/market/product/$productId'
+    | '/business'
     | '/sessions/$sessionId/new-product'
     | '/sessions/$sessionId/review'
   id:
@@ -209,9 +293,16 @@ export interface FileRouteTypes {
     | '/market/browse'
     | '/market/favorites'
     | '/market/'
+    | '/_authenticated/business/audit'
+    | '/_authenticated/business/currency'
+    | '/_authenticated/business/pricing'
+    | '/_authenticated/business/profit'
+    | '/_authenticated/business/rules'
+    | '/_authenticated/business/shipping'
     | '/_authenticated/products/$productId'
     | '/_authenticated/sessions/$sessionId'
     | '/market/product/$productId'
+    | '/_authenticated/business/'
     | '/_authenticated/sessions/$sessionId/new-product'
     | '/_authenticated/sessions/$sessionId/review'
   fileRoutesById: FileRoutesById
@@ -302,6 +393,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProductsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/business/': {
+      id: '/_authenticated/business/'
+      path: '/business'
+      fullPath: '/business/'
+      preLoaderRoute: typeof AuthenticatedBusinessIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/market/product/$productId': {
       id: '/market/product/$productId'
       path: '/product/$productId'
@@ -322,6 +420,48 @@ declare module '@tanstack/react-router' {
       fullPath: '/products/$productId'
       preLoaderRoute: typeof AuthenticatedProductsProductIdRouteImport
       parentRoute: typeof AuthenticatedProductsRoute
+    }
+    '/_authenticated/business/shipping': {
+      id: '/_authenticated/business/shipping'
+      path: '/business/shipping'
+      fullPath: '/business/shipping'
+      preLoaderRoute: typeof AuthenticatedBusinessShippingRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/business/rules': {
+      id: '/_authenticated/business/rules'
+      path: '/business/rules'
+      fullPath: '/business/rules'
+      preLoaderRoute: typeof AuthenticatedBusinessRulesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/business/profit': {
+      id: '/_authenticated/business/profit'
+      path: '/business/profit'
+      fullPath: '/business/profit'
+      preLoaderRoute: typeof AuthenticatedBusinessProfitRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/business/pricing': {
+      id: '/_authenticated/business/pricing'
+      path: '/business/pricing'
+      fullPath: '/business/pricing'
+      preLoaderRoute: typeof AuthenticatedBusinessPricingRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/business/currency': {
+      id: '/_authenticated/business/currency'
+      path: '/business/currency'
+      fullPath: '/business/currency'
+      preLoaderRoute: typeof AuthenticatedBusinessCurrencyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/business/audit': {
+      id: '/_authenticated/business/audit'
+      path: '/business/audit'
+      fullPath: '/business/audit'
+      preLoaderRoute: typeof AuthenticatedBusinessAuditRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/sessions/$sessionId/review': {
       id: '/_authenticated/sessions/$sessionId/review'
@@ -389,12 +529,26 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedProductsRoute: typeof AuthenticatedProductsRouteWithChildren
   AuthenticatedSessionsRoute: typeof AuthenticatedSessionsRouteWithChildren
   AuthenticatedSuppliersRoute: typeof AuthenticatedSuppliersRoute
+  AuthenticatedBusinessAuditRoute: typeof AuthenticatedBusinessAuditRoute
+  AuthenticatedBusinessCurrencyRoute: typeof AuthenticatedBusinessCurrencyRoute
+  AuthenticatedBusinessPricingRoute: typeof AuthenticatedBusinessPricingRoute
+  AuthenticatedBusinessProfitRoute: typeof AuthenticatedBusinessProfitRoute
+  AuthenticatedBusinessRulesRoute: typeof AuthenticatedBusinessRulesRoute
+  AuthenticatedBusinessShippingRoute: typeof AuthenticatedBusinessShippingRoute
+  AuthenticatedBusinessIndexRoute: typeof AuthenticatedBusinessIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedProductsRoute: AuthenticatedProductsRouteWithChildren,
   AuthenticatedSessionsRoute: AuthenticatedSessionsRouteWithChildren,
   AuthenticatedSuppliersRoute: AuthenticatedSuppliersRoute,
+  AuthenticatedBusinessAuditRoute: AuthenticatedBusinessAuditRoute,
+  AuthenticatedBusinessCurrencyRoute: AuthenticatedBusinessCurrencyRoute,
+  AuthenticatedBusinessPricingRoute: AuthenticatedBusinessPricingRoute,
+  AuthenticatedBusinessProfitRoute: AuthenticatedBusinessProfitRoute,
+  AuthenticatedBusinessRulesRoute: AuthenticatedBusinessRulesRoute,
+  AuthenticatedBusinessShippingRoute: AuthenticatedBusinessShippingRoute,
+  AuthenticatedBusinessIndexRoute: AuthenticatedBusinessIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
