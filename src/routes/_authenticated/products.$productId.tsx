@@ -136,6 +136,7 @@ function ProductEditor() {
         )}
         <SizesSection productId={productId} sizes={sizes} />
         <ListingSection productId={productId} supplierId={((product as ProductRow).supplier?.id) ?? null} listing={listing ?? null} />
+        {listing?.id && <PricingPreview listingId={listing.id} />}
       </div>
     </AppShell>
   );
