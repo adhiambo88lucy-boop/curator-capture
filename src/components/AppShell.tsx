@@ -1,5 +1,5 @@
 import { Link, useRouter } from "@tanstack/react-router";
-import { Home, Package, Users, LogOut, PlayCircle } from "lucide-react";
+import { Home, Package, Users, LogOut, PlayCircle, Briefcase } from "lucide-react";
 import type { ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
