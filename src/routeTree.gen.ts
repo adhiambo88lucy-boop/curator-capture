@@ -20,6 +20,8 @@ import { Route as MarketAuthRouteImport } from './routes/market/auth'
 import { Route as AuthenticatedSuppliersRouteImport } from './routes/_authenticated/suppliers'
 import { Route as AuthenticatedSessionsRouteImport } from './routes/_authenticated/sessions'
 import { Route as AuthenticatedProductsRouteImport } from './routes/_authenticated/products'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedActionCenterRouteImport } from './routes/_authenticated/action-center'
 import { Route as AuthenticatedBusinessIndexRouteImport } from './routes/_authenticated/business/index'
 import { Route as MarketProductProductIdRouteImport } from './routes/market/product.$productId'
 import { Route as AuthenticatedSessionsSessionIdRouteImport } from './routes/_authenticated/sessions.$sessionId'
@@ -87,6 +89,17 @@ const AuthenticatedProductsRoute = AuthenticatedProductsRouteImport.update({
   path: '/products',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedActionCenterRoute =
+  AuthenticatedActionCenterRouteImport.update({
+    id: '/action-center',
+    path: '/action-center',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedBusinessIndexRoute =
   AuthenticatedBusinessIndexRouteImport.update({
     id: '/business/',
@@ -163,6 +176,8 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/market': typeof MarketRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/action-center': typeof AuthenticatedActionCenterRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
   '/products': typeof AuthenticatedProductsRouteWithChildren
   '/sessions': typeof AuthenticatedSessionsRouteWithChildren
   '/suppliers': typeof AuthenticatedSuppliersRoute
@@ -186,6 +201,8 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/action-center': typeof AuthenticatedActionCenterRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
   '/products': typeof AuthenticatedProductsRouteWithChildren
   '/sessions': typeof AuthenticatedSessionsRouteWithChildren
   '/suppliers': typeof AuthenticatedSuppliersRoute
@@ -212,6 +229,8 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/market': typeof MarketRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/_authenticated/action-center': typeof AuthenticatedActionCenterRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/products': typeof AuthenticatedProductsRouteWithChildren
   '/_authenticated/sessions': typeof AuthenticatedSessionsRouteWithChildren
   '/_authenticated/suppliers': typeof AuthenticatedSuppliersRoute
@@ -238,6 +257,8 @@ export interface FileRouteTypes {
     | '/'
     | '/market'
     | '/auth'
+    | '/action-center'
+    | '/dashboard'
     | '/products'
     | '/sessions'
     | '/suppliers'
@@ -261,6 +282,8 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/action-center'
+    | '/dashboard'
     | '/products'
     | '/sessions'
     | '/suppliers'
@@ -286,6 +309,8 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/market'
     | '/auth'
+    | '/_authenticated/action-center'
+    | '/_authenticated/dashboard'
     | '/_authenticated/products'
     | '/_authenticated/sessions'
     | '/_authenticated/suppliers'
@@ -391,6 +416,20 @@ declare module '@tanstack/react-router' {
       path: '/products'
       fullPath: '/products'
       preLoaderRoute: typeof AuthenticatedProductsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/action-center': {
+      id: '/_authenticated/action-center'
+      path: '/action-center'
+      fullPath: '/action-center'
+      preLoaderRoute: typeof AuthenticatedActionCenterRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/business/': {
@@ -526,6 +565,8 @@ const AuthenticatedSessionsRouteWithChildren =
   )
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedActionCenterRoute: typeof AuthenticatedActionCenterRoute
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedProductsRoute: typeof AuthenticatedProductsRouteWithChildren
   AuthenticatedSessionsRoute: typeof AuthenticatedSessionsRouteWithChildren
   AuthenticatedSuppliersRoute: typeof AuthenticatedSuppliersRoute
@@ -539,6 +580,8 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedActionCenterRoute: AuthenticatedActionCenterRoute,
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedProductsRoute: AuthenticatedProductsRouteWithChildren,
   AuthenticatedSessionsRoute: AuthenticatedSessionsRouteWithChildren,
   AuthenticatedSuppliersRoute: AuthenticatedSuppliersRoute,
@@ -583,13 +626,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
