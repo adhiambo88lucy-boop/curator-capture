@@ -85,6 +85,18 @@ function PricingRow({ product, onSaved }: { product: Product; onSaved: () => voi
   });
 
   const supplier = product.listings[0]?.supplier_price_rmb ?? null;
+  const markupSource = String((preview as Record<string, unknown> | undefined)?.markup_source ?? "company");
+  const gbSource = String((preview as Record<string, unknown> | undefined)?.group_buy_fee_source ?? "company");
+
+  const resetField = async (field: "markup_pct" | "group_buy_fee_pct" | "fixed_price_customer") => {
+    const { error } = await supabase.from("product_pricing_overrides").upsert({ product_id: product.id, [field]: null });
+    if (error) { toast.error(error.message); return; }
+    if (field === "markup_pct") setMarkup("");
+    if (field === "group_buy_fee_pct") setGbFee("");
+    if (field === "fixed_price_customer") setFixed("");
+    toast.success("Reset to inherited");
+    onSaved(); refetch();
+  };
 
   return (
     <div className="rounded-2xl border border-border bg-card p-5">
@@ -104,9 +116,15 @@ function PricingRow({ product, onSaved }: { product: Product; onSaved: () => voi
       </div>
 
       <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
-        <Labeled label="Markup % (override)"><input value={markup} onChange={(e) => setMarkup(e.target.value)} placeholder="default" className="w-full rounded-md border border-input bg-background px-2 py-1.5 text-sm" /></Labeled>
-        <Labeled label="Group buy fee % (override)"><input value={gbFee} onChange={(e) => setGbFee(e.target.value)} placeholder="default" className="w-full rounded-md border border-input bg-background px-2 py-1.5 text-sm" /></Labeled>
-        <Labeled label="Fixed customer price"><input value={fixed} onChange={(e) => setFixed(e.target.value)} placeholder="auto" className="w-full rounded-md border border-input bg-background px-2 py-1.5 text-sm" /></Labeled>
+        <Labeled label="Markup %" source={markupSource} onReset={o?.markup_pct != null ? () => resetField("markup_pct") : undefined}>
+          <input value={markup} onChange={(e) => setMarkup(e.target.value)} placeholder="inherit" className="w-full rounded-md border border-input bg-background px-2 py-1.5 text-sm" />
+        </Labeled>
+        <Labeled label="Group buy fee %" source={gbSource} onReset={o?.group_buy_fee_pct != null ? () => resetField("group_buy_fee_pct") : undefined}>
+          <input value={gbFee} onChange={(e) => setGbFee(e.target.value)} placeholder="inherit" className="w-full rounded-md border border-input bg-background px-2 py-1.5 text-sm" />
+        </Labeled>
+        <Labeled label="Fixed customer price" onReset={o?.fixed_price_customer != null ? () => resetField("fixed_price_customer") : undefined}>
+          <input value={fixed} onChange={(e) => setFixed(e.target.value)} placeholder="auto" className="w-full rounded-md border border-input bg-background px-2 py-1.5 text-sm" />
+        </Labeled>
         <Labeled label="Weight (kg)"><input value={weight} onChange={(e) => setWeight(e.target.value)} placeholder="default" className="w-full rounded-md border border-input bg-background px-2 py-1.5 text-sm" /></Labeled>
       </div>
 
