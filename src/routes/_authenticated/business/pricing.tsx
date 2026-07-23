@@ -89,7 +89,8 @@ function PricingRow({ product, onSaved }: { product: Product; onSaved: () => voi
   const gbSource = String((preview as Record<string, unknown> | undefined)?.group_buy_fee_source ?? "company");
 
   const resetField = async (field: "markup_pct" | "group_buy_fee_pct" | "fixed_price_customer") => {
-    const { error } = await supabase.from("product_pricing_overrides").upsert({ product_id: product.id, [field]: null });
+    const payload: Record<string, unknown> = { product_id: product.id, [field]: null };
+    const { error } = await supabase.from("product_pricing_overrides").upsert(payload as never);
     if (error) { toast.error(error.message); return; }
     if (field === "markup_pct") setMarkup("");
     if (field === "group_buy_fee_pct") setGbFee("");
