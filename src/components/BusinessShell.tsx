@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 const TABS: { to: string; label: string; exact?: boolean }[] = [
-  { to: "/business", label: "Home", exact: true },
+  { to: "/business", label: "Overview", exact: true },
   { to: "/business/pricing", label: "Pricing" },
   { to: "/business/currency", label: "Currency" },
   { to: "/business/shipping", label: "Shipping" },
@@ -24,8 +24,8 @@ export function BusinessShell({ title, children }: { title: string; children: Re
       <header className="sticky top-0 z-20 border-b border-border bg-background/95 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
           <div className="flex items-center gap-3">
-            <Link to="/sessions" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1">
-              <ArrowLeft className="h-4 w-4" /> Back
+            <Link to="/dashboard" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1">
+              <ArrowLeft className="h-4 w-4" /> Dashboard
             </Link>
             <div>
               <div className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">

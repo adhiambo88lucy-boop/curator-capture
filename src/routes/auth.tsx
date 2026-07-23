@@ -32,7 +32,7 @@ function AuthPage() {
       const { error } = await fn;
       if (error) throw error;
       toast.success(mode === "signin" ? "Signed in" : "Account created");
-      router.navigate({ to: "/sessions" });
+      router.navigate({ to: "/dashboard" });
     } catch (err) {
       toast.error((err as Error).message);
     } finally {
