@@ -153,10 +153,25 @@ function PricingRow({ product, onSaved }: { product: Product; onSaved: () => voi
   );
 }
 
-function Labeled({ label, children }: { label: string; children: React.ReactNode }) {
+function Labeled({ label, children, source, onReset }: { label: string; children: React.ReactNode; source?: string; onReset?: () => void }) {
+  const badge: Record<string, string> = {
+    company: "bg-muted text-muted-foreground",
+    category: "bg-sky-100 text-sky-700",
+    product: "bg-emerald-100 text-emerald-700",
+  };
   return (
     <label className="block">
-      <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</div>
+      <div className="flex items-center justify-between gap-1">
+        <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</div>
+        <div className="flex items-center gap-1">
+          {source && (
+            <span className={`rounded-full px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider ${badge[source] ?? badge.company}`}>{source}</span>
+          )}
+          {onReset && (
+            <button type="button" onClick={onReset} className="text-[10px] text-muted-foreground hover:text-foreground underline">reset</button>
+          )}
+        </div>
+      </div>
       <div className="mt-1">{children}</div>
     </label>
   );
