@@ -1,18 +1,20 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { BusinessShell } from "@/components/BusinessShell";
-import { DollarSign, Coins, Truck, Sliders, LineChart, ScrollText } from "lucide-react";
+import { DollarSign, Coins, Truck, Sliders, LineChart, ScrollText, Layers, ClipboardCheck } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/business/")({
   component: BusinessHome,
 });
 
 const CARDS = [
-  { to: "/business/pricing", icon: DollarSign, title: "Pricing Studio", desc: "Markups, rounding, product overrides & live price previews." },
+  { to: "/business/pricing", icon: DollarSign, title: "Pricing Studio", desc: "Product-level overrides & live price previews." },
+  { to: "/business/categories", icon: Layers, title: "Categories", desc: "Manage categories, subcategories & per-category pricing overrides." },
   { to: "/business/shipping", icon: Truck, title: "Shipping Center", desc: "Companies, methods, per-kg rates and delivery estimates." },
   { to: "/business/currency", icon: Coins, title: "Currency Center", desc: "Exchange rates, platform margin and rate history." },
   { to: "/business/rules", icon: Sliders, title: "Commercial Rules", desc: "Company-wide defaults, warnings and safety limits." },
   { to: "/business/profit", icon: LineChart, title: "Profit Dashboard", desc: "Margin, expected profit and outlier products." },
   { to: "/business/audit", icon: ScrollText, title: "Audit Log", desc: "Every rate, markup and rule change is recorded here." },
+  { to: "/reservations", icon: ClipboardCheck, title: "Reservations", desc: "Review, confirm or decline buyer group-buy reservations." },
 ] as const;
 
 function BusinessHome() {
