@@ -120,7 +120,7 @@ function ActionCenter() {
           {data?.pendingReservations.map((r) => (
             <Row
               key={r.id}
-              to="/business"
+              to="/reservations"
               label={`${r.listing?.product?.internal_code ?? ""} · ${r.listing?.product?.name ?? "Unknown product"}`}
               meta={`${r.quantity} units · placed ${formatRelative(r.created_at)}`}
             />
