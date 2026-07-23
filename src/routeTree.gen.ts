@@ -19,6 +19,7 @@ import { Route as MarketBrowseRouteImport } from './routes/market/browse'
 import { Route as MarketAuthRouteImport } from './routes/market/auth'
 import { Route as AuthenticatedSuppliersRouteImport } from './routes/_authenticated/suppliers'
 import { Route as AuthenticatedSessionsRouteImport } from './routes/_authenticated/sessions'
+import { Route as AuthenticatedReservationsRouteImport } from './routes/_authenticated/reservations'
 import { Route as AuthenticatedProductsRouteImport } from './routes/_authenticated/products'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedActionCenterRouteImport } from './routes/_authenticated/action-center'
@@ -85,6 +86,12 @@ const AuthenticatedSessionsRoute = AuthenticatedSessionsRouteImport.update({
   path: '/sessions',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedReservationsRoute =
+  AuthenticatedReservationsRouteImport.update({
+    id: '/reservations',
+    path: '/reservations',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedProductsRoute = AuthenticatedProductsRouteImport.update({
   id: '/products',
   path: '/products',
@@ -186,6 +193,7 @@ export interface FileRoutesByFullPath {
   '/action-center': typeof AuthenticatedActionCenterRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/products': typeof AuthenticatedProductsRouteWithChildren
+  '/reservations': typeof AuthenticatedReservationsRoute
   '/sessions': typeof AuthenticatedSessionsRouteWithChildren
   '/suppliers': typeof AuthenticatedSuppliersRoute
   '/market/auth': typeof MarketAuthRoute
@@ -212,6 +220,7 @@ export interface FileRoutesByTo {
   '/action-center': typeof AuthenticatedActionCenterRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/products': typeof AuthenticatedProductsRouteWithChildren
+  '/reservations': typeof AuthenticatedReservationsRoute
   '/sessions': typeof AuthenticatedSessionsRouteWithChildren
   '/suppliers': typeof AuthenticatedSuppliersRoute
   '/market/auth': typeof MarketAuthRoute
@@ -241,6 +250,7 @@ export interface FileRoutesById {
   '/_authenticated/action-center': typeof AuthenticatedActionCenterRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/products': typeof AuthenticatedProductsRouteWithChildren
+  '/_authenticated/reservations': typeof AuthenticatedReservationsRoute
   '/_authenticated/sessions': typeof AuthenticatedSessionsRouteWithChildren
   '/_authenticated/suppliers': typeof AuthenticatedSuppliersRoute
   '/market/auth': typeof MarketAuthRoute
@@ -270,6 +280,7 @@ export interface FileRouteTypes {
     | '/action-center'
     | '/dashboard'
     | '/products'
+    | '/reservations'
     | '/sessions'
     | '/suppliers'
     | '/market/auth'
@@ -296,6 +307,7 @@ export interface FileRouteTypes {
     | '/action-center'
     | '/dashboard'
     | '/products'
+    | '/reservations'
     | '/sessions'
     | '/suppliers'
     | '/market/auth'
@@ -324,6 +336,7 @@ export interface FileRouteTypes {
     | '/_authenticated/action-center'
     | '/_authenticated/dashboard'
     | '/_authenticated/products'
+    | '/_authenticated/reservations'
     | '/_authenticated/sessions'
     | '/_authenticated/suppliers'
     | '/market/auth'
@@ -422,6 +435,13 @@ declare module '@tanstack/react-router' {
       path: '/sessions'
       fullPath: '/sessions'
       preLoaderRoute: typeof AuthenticatedSessionsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/reservations': {
+      id: '/_authenticated/reservations'
+      path: '/reservations'
+      fullPath: '/reservations'
+      preLoaderRoute: typeof AuthenticatedReservationsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/products': {
@@ -588,6 +608,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedActionCenterRoute: typeof AuthenticatedActionCenterRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedProductsRoute: typeof AuthenticatedProductsRouteWithChildren
+  AuthenticatedReservationsRoute: typeof AuthenticatedReservationsRoute
   AuthenticatedSessionsRoute: typeof AuthenticatedSessionsRouteWithChildren
   AuthenticatedSuppliersRoute: typeof AuthenticatedSuppliersRoute
   AuthenticatedBusinessAuditRoute: typeof AuthenticatedBusinessAuditRoute
@@ -604,6 +625,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedActionCenterRoute: AuthenticatedActionCenterRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedProductsRoute: AuthenticatedProductsRouteWithChildren,
+  AuthenticatedReservationsRoute: AuthenticatedReservationsRoute,
   AuthenticatedSessionsRoute: AuthenticatedSessionsRouteWithChildren,
   AuthenticatedSuppliersRoute: AuthenticatedSuppliersRoute,
   AuthenticatedBusinessAuditRoute: AuthenticatedBusinessAuditRoute,
