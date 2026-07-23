@@ -17,7 +17,7 @@ type Reservation = {
   listing_id: string;
   buyer_id: string;
   quantity: number;
-  status: "pending" | "confirmed" | "cancelled" | "fulfilled";
+  status: "pending" | "confirmed" | "cancelled";
   notes: string | null;
   created_at: string;
   listings: {
