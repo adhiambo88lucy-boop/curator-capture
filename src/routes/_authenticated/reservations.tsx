@@ -30,7 +30,6 @@ const FILTERS: { key: Reservation["status"] | "all"; label: string }[] = [
   { key: "pending", label: "Pending" },
   { key: "confirmed", label: "Confirmed" },
   { key: "cancelled", label: "Cancelled" },
-  { key: "fulfilled", label: "Fulfilled" },
   { key: "all", label: "All" },
 ];
 
