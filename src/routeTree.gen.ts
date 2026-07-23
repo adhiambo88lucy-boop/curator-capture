@@ -31,6 +31,7 @@ import { Route as AuthenticatedBusinessRulesRouteImport } from './routes/_authen
 import { Route as AuthenticatedBusinessProfitRouteImport } from './routes/_authenticated/business/profit'
 import { Route as AuthenticatedBusinessPricingRouteImport } from './routes/_authenticated/business/pricing'
 import { Route as AuthenticatedBusinessCurrencyRouteImport } from './routes/_authenticated/business/currency'
+import { Route as AuthenticatedBusinessCategoriesRouteImport } from './routes/_authenticated/business/categories'
 import { Route as AuthenticatedBusinessAuditRouteImport } from './routes/_authenticated/business/audit'
 import { Route as AuthenticatedSessionsSessionIdReviewRouteImport } from './routes/_authenticated/sessions.$sessionId.review'
 import { Route as AuthenticatedSessionsSessionIdNewProductRouteImport } from './routes/_authenticated/sessions.$sessionId.new-product'
@@ -153,6 +154,12 @@ const AuthenticatedBusinessCurrencyRoute =
     path: '/business/currency',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedBusinessCategoriesRoute =
+  AuthenticatedBusinessCategoriesRouteImport.update({
+    id: '/business/categories',
+    path: '/business/categories',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedBusinessAuditRoute =
   AuthenticatedBusinessAuditRouteImport.update({
     id: '/business/audit',
@@ -186,6 +193,7 @@ export interface FileRoutesByFullPath {
   '/market/favorites': typeof MarketFavoritesRoute
   '/market/': typeof MarketIndexRoute
   '/business/audit': typeof AuthenticatedBusinessAuditRoute
+  '/business/categories': typeof AuthenticatedBusinessCategoriesRoute
   '/business/currency': typeof AuthenticatedBusinessCurrencyRoute
   '/business/pricing': typeof AuthenticatedBusinessPricingRoute
   '/business/profit': typeof AuthenticatedBusinessProfitRoute
@@ -211,6 +219,7 @@ export interface FileRoutesByTo {
   '/market/favorites': typeof MarketFavoritesRoute
   '/market': typeof MarketIndexRoute
   '/business/audit': typeof AuthenticatedBusinessAuditRoute
+  '/business/categories': typeof AuthenticatedBusinessCategoriesRoute
   '/business/currency': typeof AuthenticatedBusinessCurrencyRoute
   '/business/pricing': typeof AuthenticatedBusinessPricingRoute
   '/business/profit': typeof AuthenticatedBusinessProfitRoute
@@ -239,6 +248,7 @@ export interface FileRoutesById {
   '/market/favorites': typeof MarketFavoritesRoute
   '/market/': typeof MarketIndexRoute
   '/_authenticated/business/audit': typeof AuthenticatedBusinessAuditRoute
+  '/_authenticated/business/categories': typeof AuthenticatedBusinessCategoriesRoute
   '/_authenticated/business/currency': typeof AuthenticatedBusinessCurrencyRoute
   '/_authenticated/business/pricing': typeof AuthenticatedBusinessPricingRoute
   '/_authenticated/business/profit': typeof AuthenticatedBusinessProfitRoute
@@ -267,6 +277,7 @@ export interface FileRouteTypes {
     | '/market/favorites'
     | '/market/'
     | '/business/audit'
+    | '/business/categories'
     | '/business/currency'
     | '/business/pricing'
     | '/business/profit'
@@ -292,6 +303,7 @@ export interface FileRouteTypes {
     | '/market/favorites'
     | '/market'
     | '/business/audit'
+    | '/business/categories'
     | '/business/currency'
     | '/business/pricing'
     | '/business/profit'
@@ -319,6 +331,7 @@ export interface FileRouteTypes {
     | '/market/favorites'
     | '/market/'
     | '/_authenticated/business/audit'
+    | '/_authenticated/business/categories'
     | '/_authenticated/business/currency'
     | '/_authenticated/business/pricing'
     | '/_authenticated/business/profit'
@@ -495,6 +508,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedBusinessCurrencyRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/business/categories': {
+      id: '/_authenticated/business/categories'
+      path: '/business/categories'
+      fullPath: '/business/categories'
+      preLoaderRoute: typeof AuthenticatedBusinessCategoriesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/business/audit': {
       id: '/_authenticated/business/audit'
       path: '/business/audit'
@@ -571,6 +591,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSessionsRoute: typeof AuthenticatedSessionsRouteWithChildren
   AuthenticatedSuppliersRoute: typeof AuthenticatedSuppliersRoute
   AuthenticatedBusinessAuditRoute: typeof AuthenticatedBusinessAuditRoute
+  AuthenticatedBusinessCategoriesRoute: typeof AuthenticatedBusinessCategoriesRoute
   AuthenticatedBusinessCurrencyRoute: typeof AuthenticatedBusinessCurrencyRoute
   AuthenticatedBusinessPricingRoute: typeof AuthenticatedBusinessPricingRoute
   AuthenticatedBusinessProfitRoute: typeof AuthenticatedBusinessProfitRoute
@@ -586,6 +607,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSessionsRoute: AuthenticatedSessionsRouteWithChildren,
   AuthenticatedSuppliersRoute: AuthenticatedSuppliersRoute,
   AuthenticatedBusinessAuditRoute: AuthenticatedBusinessAuditRoute,
+  AuthenticatedBusinessCategoriesRoute: AuthenticatedBusinessCategoriesRoute,
   AuthenticatedBusinessCurrencyRoute: AuthenticatedBusinessCurrencyRoute,
   AuthenticatedBusinessPricingRoute: AuthenticatedBusinessPricingRoute,
   AuthenticatedBusinessProfitRoute: AuthenticatedBusinessProfitRoute,
