@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 const TABS: { to: string; label: string; exact?: boolean }[] = [
   { to: "/business", label: "Overview", exact: true },
   { to: "/business/pricing", label: "Pricing" },
+  { to: "/business/categories", label: "Categories" },
   { to: "/business/currency", label: "Currency" },
   { to: "/business/shipping", label: "Shipping" },
   { to: "/business/rules", label: "Rules" },
