@@ -175,6 +175,41 @@ export type Database = {
         }
         Relationships: []
       }
+      category_pricing_overrides: {
+        Row: {
+          category_id: string
+          group_buy_fee_pct: number | null
+          markup_pct: number | null
+          notes: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          category_id: string
+          group_buy_fee_pct?: number | null
+          markup_pct?: number | null
+          notes?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          category_id?: string
+          group_buy_fee_pct?: number | null
+          markup_pct?: number | null
+          notes?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "category_pricing_overrides_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: true
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       currencies: {
         Row: {
           active: boolean

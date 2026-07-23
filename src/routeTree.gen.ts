@@ -19,6 +19,7 @@ import { Route as MarketBrowseRouteImport } from './routes/market/browse'
 import { Route as MarketAuthRouteImport } from './routes/market/auth'
 import { Route as AuthenticatedSuppliersRouteImport } from './routes/_authenticated/suppliers'
 import { Route as AuthenticatedSessionsRouteImport } from './routes/_authenticated/sessions'
+import { Route as AuthenticatedReservationsRouteImport } from './routes/_authenticated/reservations'
 import { Route as AuthenticatedProductsRouteImport } from './routes/_authenticated/products'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedActionCenterRouteImport } from './routes/_authenticated/action-center'
@@ -31,6 +32,7 @@ import { Route as AuthenticatedBusinessRulesRouteImport } from './routes/_authen
 import { Route as AuthenticatedBusinessProfitRouteImport } from './routes/_authenticated/business/profit'
 import { Route as AuthenticatedBusinessPricingRouteImport } from './routes/_authenticated/business/pricing'
 import { Route as AuthenticatedBusinessCurrencyRouteImport } from './routes/_authenticated/business/currency'
+import { Route as AuthenticatedBusinessCategoriesRouteImport } from './routes/_authenticated/business/categories'
 import { Route as AuthenticatedBusinessAuditRouteImport } from './routes/_authenticated/business/audit'
 import { Route as AuthenticatedSessionsSessionIdReviewRouteImport } from './routes/_authenticated/sessions.$sessionId.review'
 import { Route as AuthenticatedSessionsSessionIdNewProductRouteImport } from './routes/_authenticated/sessions.$sessionId.new-product'
@@ -84,6 +86,12 @@ const AuthenticatedSessionsRoute = AuthenticatedSessionsRouteImport.update({
   path: '/sessions',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedReservationsRoute =
+  AuthenticatedReservationsRouteImport.update({
+    id: '/reservations',
+    path: '/reservations',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedProductsRoute = AuthenticatedProductsRouteImport.update({
   id: '/products',
   path: '/products',
@@ -153,6 +161,12 @@ const AuthenticatedBusinessCurrencyRoute =
     path: '/business/currency',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedBusinessCategoriesRoute =
+  AuthenticatedBusinessCategoriesRouteImport.update({
+    id: '/business/categories',
+    path: '/business/categories',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedBusinessAuditRoute =
   AuthenticatedBusinessAuditRouteImport.update({
     id: '/business/audit',
@@ -179,6 +193,7 @@ export interface FileRoutesByFullPath {
   '/action-center': typeof AuthenticatedActionCenterRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/products': typeof AuthenticatedProductsRouteWithChildren
+  '/reservations': typeof AuthenticatedReservationsRoute
   '/sessions': typeof AuthenticatedSessionsRouteWithChildren
   '/suppliers': typeof AuthenticatedSuppliersRoute
   '/market/auth': typeof MarketAuthRoute
@@ -186,6 +201,7 @@ export interface FileRoutesByFullPath {
   '/market/favorites': typeof MarketFavoritesRoute
   '/market/': typeof MarketIndexRoute
   '/business/audit': typeof AuthenticatedBusinessAuditRoute
+  '/business/categories': typeof AuthenticatedBusinessCategoriesRoute
   '/business/currency': typeof AuthenticatedBusinessCurrencyRoute
   '/business/pricing': typeof AuthenticatedBusinessPricingRoute
   '/business/profit': typeof AuthenticatedBusinessProfitRoute
@@ -204,6 +220,7 @@ export interface FileRoutesByTo {
   '/action-center': typeof AuthenticatedActionCenterRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/products': typeof AuthenticatedProductsRouteWithChildren
+  '/reservations': typeof AuthenticatedReservationsRoute
   '/sessions': typeof AuthenticatedSessionsRouteWithChildren
   '/suppliers': typeof AuthenticatedSuppliersRoute
   '/market/auth': typeof MarketAuthRoute
@@ -211,6 +228,7 @@ export interface FileRoutesByTo {
   '/market/favorites': typeof MarketFavoritesRoute
   '/market': typeof MarketIndexRoute
   '/business/audit': typeof AuthenticatedBusinessAuditRoute
+  '/business/categories': typeof AuthenticatedBusinessCategoriesRoute
   '/business/currency': typeof AuthenticatedBusinessCurrencyRoute
   '/business/pricing': typeof AuthenticatedBusinessPricingRoute
   '/business/profit': typeof AuthenticatedBusinessProfitRoute
@@ -232,6 +250,7 @@ export interface FileRoutesById {
   '/_authenticated/action-center': typeof AuthenticatedActionCenterRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/products': typeof AuthenticatedProductsRouteWithChildren
+  '/_authenticated/reservations': typeof AuthenticatedReservationsRoute
   '/_authenticated/sessions': typeof AuthenticatedSessionsRouteWithChildren
   '/_authenticated/suppliers': typeof AuthenticatedSuppliersRoute
   '/market/auth': typeof MarketAuthRoute
@@ -239,6 +258,7 @@ export interface FileRoutesById {
   '/market/favorites': typeof MarketFavoritesRoute
   '/market/': typeof MarketIndexRoute
   '/_authenticated/business/audit': typeof AuthenticatedBusinessAuditRoute
+  '/_authenticated/business/categories': typeof AuthenticatedBusinessCategoriesRoute
   '/_authenticated/business/currency': typeof AuthenticatedBusinessCurrencyRoute
   '/_authenticated/business/pricing': typeof AuthenticatedBusinessPricingRoute
   '/_authenticated/business/profit': typeof AuthenticatedBusinessProfitRoute
@@ -260,6 +280,7 @@ export interface FileRouteTypes {
     | '/action-center'
     | '/dashboard'
     | '/products'
+    | '/reservations'
     | '/sessions'
     | '/suppliers'
     | '/market/auth'
@@ -267,6 +288,7 @@ export interface FileRouteTypes {
     | '/market/favorites'
     | '/market/'
     | '/business/audit'
+    | '/business/categories'
     | '/business/currency'
     | '/business/pricing'
     | '/business/profit'
@@ -285,6 +307,7 @@ export interface FileRouteTypes {
     | '/action-center'
     | '/dashboard'
     | '/products'
+    | '/reservations'
     | '/sessions'
     | '/suppliers'
     | '/market/auth'
@@ -292,6 +315,7 @@ export interface FileRouteTypes {
     | '/market/favorites'
     | '/market'
     | '/business/audit'
+    | '/business/categories'
     | '/business/currency'
     | '/business/pricing'
     | '/business/profit'
@@ -312,6 +336,7 @@ export interface FileRouteTypes {
     | '/_authenticated/action-center'
     | '/_authenticated/dashboard'
     | '/_authenticated/products'
+    | '/_authenticated/reservations'
     | '/_authenticated/sessions'
     | '/_authenticated/suppliers'
     | '/market/auth'
@@ -319,6 +344,7 @@ export interface FileRouteTypes {
     | '/market/favorites'
     | '/market/'
     | '/_authenticated/business/audit'
+    | '/_authenticated/business/categories'
     | '/_authenticated/business/currency'
     | '/_authenticated/business/pricing'
     | '/_authenticated/business/profit'
@@ -411,6 +437,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSessionsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/reservations': {
+      id: '/_authenticated/reservations'
+      path: '/reservations'
+      fullPath: '/reservations'
+      preLoaderRoute: typeof AuthenticatedReservationsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/products': {
       id: '/_authenticated/products'
       path: '/products'
@@ -495,6 +528,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedBusinessCurrencyRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/business/categories': {
+      id: '/_authenticated/business/categories'
+      path: '/business/categories'
+      fullPath: '/business/categories'
+      preLoaderRoute: typeof AuthenticatedBusinessCategoriesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/business/audit': {
       id: '/_authenticated/business/audit'
       path: '/business/audit'
@@ -568,9 +608,11 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedActionCenterRoute: typeof AuthenticatedActionCenterRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedProductsRoute: typeof AuthenticatedProductsRouteWithChildren
+  AuthenticatedReservationsRoute: typeof AuthenticatedReservationsRoute
   AuthenticatedSessionsRoute: typeof AuthenticatedSessionsRouteWithChildren
   AuthenticatedSuppliersRoute: typeof AuthenticatedSuppliersRoute
   AuthenticatedBusinessAuditRoute: typeof AuthenticatedBusinessAuditRoute
+  AuthenticatedBusinessCategoriesRoute: typeof AuthenticatedBusinessCategoriesRoute
   AuthenticatedBusinessCurrencyRoute: typeof AuthenticatedBusinessCurrencyRoute
   AuthenticatedBusinessPricingRoute: typeof AuthenticatedBusinessPricingRoute
   AuthenticatedBusinessProfitRoute: typeof AuthenticatedBusinessProfitRoute
@@ -583,9 +625,11 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedActionCenterRoute: AuthenticatedActionCenterRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedProductsRoute: AuthenticatedProductsRouteWithChildren,
+  AuthenticatedReservationsRoute: AuthenticatedReservationsRoute,
   AuthenticatedSessionsRoute: AuthenticatedSessionsRouteWithChildren,
   AuthenticatedSuppliersRoute: AuthenticatedSuppliersRoute,
   AuthenticatedBusinessAuditRoute: AuthenticatedBusinessAuditRoute,
+  AuthenticatedBusinessCategoriesRoute: AuthenticatedBusinessCategoriesRoute,
   AuthenticatedBusinessCurrencyRoute: AuthenticatedBusinessCurrencyRoute,
   AuthenticatedBusinessPricingRoute: AuthenticatedBusinessPricingRoute,
   AuthenticatedBusinessProfitRoute: AuthenticatedBusinessProfitRoute,
