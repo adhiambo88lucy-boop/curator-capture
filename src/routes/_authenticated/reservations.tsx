@@ -167,14 +167,6 @@ function ReservationsPage() {
                             <X className="h-3.5 w-3.5" /> Decline
                           </button>
                         )}
-                        {r.status === "confirmed" && (
-                          <button
-                            onClick={() => update.mutate({ r, status: "fulfilled" })}
-                            className="rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-muted"
-                          >
-                            Mark fulfilled
-                          </button>
-                        )}
                       </div>
                     </div>
                   ))}
