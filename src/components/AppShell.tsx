@@ -1,7 +1,8 @@
 import { Link, useRouter } from "@tanstack/react-router";
-import { Home, Package, Users, LogOut, PlayCircle, Briefcase } from "lucide-react";
+import { LayoutDashboard, Package, Users, LogOut, PlayCircle, Briefcase, Store } from "lucide-react";
 import type { ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { WorkspaceSwitcher } from "@/components/WorkspaceSwitcher";
 
 interface AppShellProps {
   title?: string;
@@ -19,9 +20,9 @@ export function AppShell({ title, action, children, back }: AppShellProps) {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <div className="min-h-screen bg-background pb-24">
       <header className="sticky top-0 z-20 border-b border-border bg-background/90 backdrop-blur">
-        <div className="mx-auto flex max-w-2xl items-center justify-between px-4 py-3">
+        <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-3">
           <div className="flex items-center gap-3 min-w-0">
             {back && (
               <Link
@@ -43,6 +44,7 @@ export function AppShell({ title, action, children, back }: AppShellProps) {
             </div>
           </div>
           <div className="flex items-center gap-2 shrink-0">
+            <WorkspaceSwitcher />
             {action}
             <button
               onClick={signOut}
@@ -54,14 +56,15 @@ export function AppShell({ title, action, children, back }: AppShellProps) {
           </div>
         </div>
       </header>
-      <main className="mx-auto max-w-2xl px-4 py-5">{children}</main>
+      <main className="mx-auto max-w-3xl px-4 py-5">{children}</main>
       <nav className="fixed inset-x-0 bottom-0 z-20 border-t border-border bg-background/95 backdrop-blur">
-        <div className="mx-auto grid max-w-2xl grid-cols-5">
-          <NavBtn to="/" icon={<Home className="h-5 w-5" />} label="Home" exact />
+        <div className="mx-auto grid max-w-3xl grid-cols-6">
+          <NavBtn to="/dashboard" icon={<LayoutDashboard className="h-5 w-5" />} label="Dashboard" />
           <NavBtn to="/sessions" icon={<PlayCircle className="h-5 w-5" />} label="Sessions" />
           <NavBtn to="/products" icon={<Package className="h-5 w-5" />} label="Products" />
           <NavBtn to="/suppliers" icon={<Users className="h-5 w-5" />} label="Suppliers" />
-          <NavBtn to="/business" icon={<Briefcase className="h-5 w-5" />} label="Business" />
+          <NavBtn to="/business" icon={<Briefcase className="h-5 w-5" />} label="Operations" />
+          <MarketNavBtn />
         </div>
       </nav>
     </div>
@@ -78,6 +81,19 @@ function NavBtn({ to, icon, label, exact }: { to: string; icon: ReactNode; label
     >
       {icon}
       <span>{label}</span>
+    </Link>
+  );
+}
+
+/** Marketplace tab intentionally leaves the Curator Console. */
+function MarketNavBtn() {
+  return (
+    <Link
+      to="/market"
+      className="flex flex-col items-center gap-1 py-3 text-[11px] font-medium text-muted-foreground"
+    >
+      <Store className="h-5 w-5" />
+      <span>Marketplace</span>
     </Link>
   );
 }
