@@ -92,7 +92,7 @@ function DashboardPage() {
           value={stats?.activeSessions ?? "—"}
         />
         <StatCard
-          to="/action-center"
+          to="/reservations"
           icon={<ClipboardCheck className="h-4 w-4" />}
           label="Reservations awaiting review"
           value={stats?.pendingReservations ?? "—"}
