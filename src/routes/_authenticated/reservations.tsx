@@ -185,7 +185,7 @@ function StatusBadge({ status }: { status: Reservation["status"] }) {
     pending: { c: "bg-amber-100 text-amber-700", icon: <Clock className="h-3 w-3" />, label: "Pending" },
     confirmed: { c: "bg-emerald-100 text-emerald-700", icon: <Check className="h-3 w-3" />, label: "Confirmed" },
     cancelled: { c: "bg-muted text-muted-foreground", icon: <X className="h-3 w-3" />, label: "Cancelled" },
-    fulfilled: { c: "bg-sky-100 text-sky-700", icon: <Users className="h-3 w-3" />, label: "Fulfilled" },
+    
   };
   const m = map[status];
   return (
