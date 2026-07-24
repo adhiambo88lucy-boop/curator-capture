@@ -42,11 +42,12 @@ function ActionCenter() {
         staleExchangeRates,
         gbEndingToday,
         awaitingPublish,
+        sessionsToReview,
       ] = await Promise.all([
         supabase
           .from("group_buy_reservations")
-          .select("id,quantity,status,created_at,listing:listings(id,product:products(id,name,internal_code))")
-          .eq("status", "pending")
+          .select("id,reservation_number,quantity,workflow_stage,created_at,listing:listings(id,product:products(id,name,internal_code))")
+          .eq("workflow_stage", "curator_review")
           .order("created_at", { ascending: false })
           .limit(10),
         supabase
@@ -88,6 +89,13 @@ function ActionCenter() {
           .select("id,code,product:products(id,name,internal_code)")
           .eq("publish_status", "draft")
           .limit(10),
+        supabase
+          .from("capture_sessions")
+          .select("id,started_at,supplier:suppliers(name)")
+          .eq("status", "active")
+          .lt("started_at", new Date(now.getTime() - 24 * 3_600_000).toISOString())
+          .order("started_at", { ascending: false })
+          .limit(10),
       ]);
 
       return {
@@ -101,6 +109,7 @@ function ActionCenter() {
         staleExchangeRates: staleExchangeRates.data ?? [],
         gbEndingToday: gbEndingToday.data ?? [],
         awaitingPublish: awaitingPublish.data ?? [],
+        sessionsToReview: sessionsToReview.data ?? [],
       };
     },
     staleTime: 20_000,
