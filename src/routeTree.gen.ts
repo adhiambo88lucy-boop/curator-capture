@@ -26,6 +26,7 @@ import { Route as AuthenticatedActionCenterRouteImport } from './routes/_authent
 import { Route as AuthenticatedBusinessIndexRouteImport } from './routes/_authenticated/business/index'
 import { Route as MarketProductProductIdRouteImport } from './routes/market/product.$productId'
 import { Route as AuthenticatedSessionsSessionIdRouteImport } from './routes/_authenticated/sessions.$sessionId'
+import { Route as AuthenticatedReservationsReservationIdRouteImport } from './routes/_authenticated/reservations.$reservationId'
 import { Route as AuthenticatedProductsProductIdRouteImport } from './routes/_authenticated/products.$productId'
 import { Route as AuthenticatedBusinessShippingRouteImport } from './routes/_authenticated/business/shipping'
 import { Route as AuthenticatedBusinessRulesRouteImport } from './routes/_authenticated/business/rules'
@@ -125,6 +126,12 @@ const AuthenticatedSessionsSessionIdRoute =
     path: '/$sessionId',
     getParentRoute: () => AuthenticatedSessionsRoute,
   } as any)
+const AuthenticatedReservationsReservationIdRoute =
+  AuthenticatedReservationsReservationIdRouteImport.update({
+    id: '/$reservationId',
+    path: '/$reservationId',
+    getParentRoute: () => AuthenticatedReservationsRoute,
+  } as any)
 const AuthenticatedProductsProductIdRoute =
   AuthenticatedProductsProductIdRouteImport.update({
     id: '/$productId',
@@ -193,7 +200,7 @@ export interface FileRoutesByFullPath {
   '/action-center': typeof AuthenticatedActionCenterRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/products': typeof AuthenticatedProductsRouteWithChildren
-  '/reservations': typeof AuthenticatedReservationsRoute
+  '/reservations': typeof AuthenticatedReservationsRouteWithChildren
   '/sessions': typeof AuthenticatedSessionsRouteWithChildren
   '/suppliers': typeof AuthenticatedSuppliersRoute
   '/market/auth': typeof MarketAuthRoute
@@ -208,6 +215,7 @@ export interface FileRoutesByFullPath {
   '/business/rules': typeof AuthenticatedBusinessRulesRoute
   '/business/shipping': typeof AuthenticatedBusinessShippingRoute
   '/products/$productId': typeof AuthenticatedProductsProductIdRoute
+  '/reservations/$reservationId': typeof AuthenticatedReservationsReservationIdRoute
   '/sessions/$sessionId': typeof AuthenticatedSessionsSessionIdRouteWithChildren
   '/market/product/$productId': typeof MarketProductProductIdRoute
   '/business/': typeof AuthenticatedBusinessIndexRoute
@@ -220,7 +228,7 @@ export interface FileRoutesByTo {
   '/action-center': typeof AuthenticatedActionCenterRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/products': typeof AuthenticatedProductsRouteWithChildren
-  '/reservations': typeof AuthenticatedReservationsRoute
+  '/reservations': typeof AuthenticatedReservationsRouteWithChildren
   '/sessions': typeof AuthenticatedSessionsRouteWithChildren
   '/suppliers': typeof AuthenticatedSuppliersRoute
   '/market/auth': typeof MarketAuthRoute
@@ -235,6 +243,7 @@ export interface FileRoutesByTo {
   '/business/rules': typeof AuthenticatedBusinessRulesRoute
   '/business/shipping': typeof AuthenticatedBusinessShippingRoute
   '/products/$productId': typeof AuthenticatedProductsProductIdRoute
+  '/reservations/$reservationId': typeof AuthenticatedReservationsReservationIdRoute
   '/sessions/$sessionId': typeof AuthenticatedSessionsSessionIdRouteWithChildren
   '/market/product/$productId': typeof MarketProductProductIdRoute
   '/business': typeof AuthenticatedBusinessIndexRoute
@@ -250,7 +259,7 @@ export interface FileRoutesById {
   '/_authenticated/action-center': typeof AuthenticatedActionCenterRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/products': typeof AuthenticatedProductsRouteWithChildren
-  '/_authenticated/reservations': typeof AuthenticatedReservationsRoute
+  '/_authenticated/reservations': typeof AuthenticatedReservationsRouteWithChildren
   '/_authenticated/sessions': typeof AuthenticatedSessionsRouteWithChildren
   '/_authenticated/suppliers': typeof AuthenticatedSuppliersRoute
   '/market/auth': typeof MarketAuthRoute
@@ -265,6 +274,7 @@ export interface FileRoutesById {
   '/_authenticated/business/rules': typeof AuthenticatedBusinessRulesRoute
   '/_authenticated/business/shipping': typeof AuthenticatedBusinessShippingRoute
   '/_authenticated/products/$productId': typeof AuthenticatedProductsProductIdRoute
+  '/_authenticated/reservations/$reservationId': typeof AuthenticatedReservationsReservationIdRoute
   '/_authenticated/sessions/$sessionId': typeof AuthenticatedSessionsSessionIdRouteWithChildren
   '/market/product/$productId': typeof MarketProductProductIdRoute
   '/_authenticated/business/': typeof AuthenticatedBusinessIndexRoute
@@ -295,6 +305,7 @@ export interface FileRouteTypes {
     | '/business/rules'
     | '/business/shipping'
     | '/products/$productId'
+    | '/reservations/$reservationId'
     | '/sessions/$sessionId'
     | '/market/product/$productId'
     | '/business/'
@@ -322,6 +333,7 @@ export interface FileRouteTypes {
     | '/business/rules'
     | '/business/shipping'
     | '/products/$productId'
+    | '/reservations/$reservationId'
     | '/sessions/$sessionId'
     | '/market/product/$productId'
     | '/business'
@@ -351,6 +363,7 @@ export interface FileRouteTypes {
     | '/_authenticated/business/rules'
     | '/_authenticated/business/shipping'
     | '/_authenticated/products/$productId'
+    | '/_authenticated/reservations/$reservationId'
     | '/_authenticated/sessions/$sessionId'
     | '/market/product/$productId'
     | '/_authenticated/business/'
@@ -486,6 +499,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSessionsSessionIdRouteImport
       parentRoute: typeof AuthenticatedSessionsRoute
     }
+    '/_authenticated/reservations/$reservationId': {
+      id: '/_authenticated/reservations/$reservationId'
+      path: '/$reservationId'
+      fullPath: '/reservations/$reservationId'
+      preLoaderRoute: typeof AuthenticatedReservationsReservationIdRouteImport
+      parentRoute: typeof AuthenticatedReservationsRoute
+    }
     '/_authenticated/products/$productId': {
       id: '/_authenticated/products/$productId'
       path: '/$productId'
@@ -572,6 +592,21 @@ const AuthenticatedProductsRouteWithChildren =
     AuthenticatedProductsRouteChildren,
   )
 
+interface AuthenticatedReservationsRouteChildren {
+  AuthenticatedReservationsReservationIdRoute: typeof AuthenticatedReservationsReservationIdRoute
+}
+
+const AuthenticatedReservationsRouteChildren: AuthenticatedReservationsRouteChildren =
+  {
+    AuthenticatedReservationsReservationIdRoute:
+      AuthenticatedReservationsReservationIdRoute,
+  }
+
+const AuthenticatedReservationsRouteWithChildren =
+  AuthenticatedReservationsRoute._addFileChildren(
+    AuthenticatedReservationsRouteChildren,
+  )
+
 interface AuthenticatedSessionsSessionIdRouteChildren {
   AuthenticatedSessionsSessionIdNewProductRoute: typeof AuthenticatedSessionsSessionIdNewProductRoute
   AuthenticatedSessionsSessionIdReviewRoute: typeof AuthenticatedSessionsSessionIdReviewRoute
@@ -608,7 +643,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedActionCenterRoute: typeof AuthenticatedActionCenterRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedProductsRoute: typeof AuthenticatedProductsRouteWithChildren
-  AuthenticatedReservationsRoute: typeof AuthenticatedReservationsRoute
+  AuthenticatedReservationsRoute: typeof AuthenticatedReservationsRouteWithChildren
   AuthenticatedSessionsRoute: typeof AuthenticatedSessionsRouteWithChildren
   AuthenticatedSuppliersRoute: typeof AuthenticatedSuppliersRoute
   AuthenticatedBusinessAuditRoute: typeof AuthenticatedBusinessAuditRoute
@@ -625,7 +660,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedActionCenterRoute: AuthenticatedActionCenterRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedProductsRoute: AuthenticatedProductsRouteWithChildren,
-  AuthenticatedReservationsRoute: AuthenticatedReservationsRoute,
+  AuthenticatedReservationsRoute: AuthenticatedReservationsRouteWithChildren,
   AuthenticatedSessionsRoute: AuthenticatedSessionsRouteWithChildren,
   AuthenticatedSuppliersRoute: AuthenticatedSuppliersRoute,
   AuthenticatedBusinessAuditRoute: AuthenticatedBusinessAuditRoute,
