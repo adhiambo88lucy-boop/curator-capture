@@ -13,6 +13,7 @@ import {
   Flame,
   UploadCloud,
   ChevronRight,
+  PlayCircle,
 } from "lucide-react";
 import type { ReactNode } from "react";
 
