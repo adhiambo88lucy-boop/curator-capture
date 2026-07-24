@@ -1,12 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { useQuery } from "@tanstack/react-query";
 import { AppShell } from "@/components/AppShell";
-import { AppButton } from "@/components/AppButton";
 import { supabase } from "@/integrations/supabase/client";
-import { logAudit } from "@/lib/audit";
-import { useState } from "react";
-import { Users, Check, X, Clock } from "lucide-react";
+import { useMemo, useState } from "react";
+import { Search, ChevronRight } from "lucide-react";
+import { formatRelative } from "@/lib/format";
 
 export const Route = createFileRoute("/_authenticated/reservations")({
   component: ReservationsPage,
@@ -14,91 +12,120 @@ export const Route = createFileRoute("/_authenticated/reservations")({
 
 type Reservation = {
   id: string;
+  reservation_number: string;
   listing_id: string;
   buyer_id: string;
   quantity: number;
   status: "pending" | "confirmed" | "cancelled";
+  workflow_stage: string;
+  reservation_type: string;
+  size_selection: string | null;
+  colour_id: string | null;
   notes: string | null;
+  curator_notes: string | null;
   created_at: string;
+  colour: { name: string } | null;
   listings: {
     id: string; code: string; moq: number | null;
     products: { id: string; name: string; internal_code: string } | null;
   } | null;
+  buyer_profile: { business_name: string | null; contact_name: string | null; country: string | null } | null;
 };
 
-const FILTERS: { key: Reservation["status"] | "all"; label: string }[] = [
-  { key: "pending", label: "Pending" },
-  { key: "confirmed", label: "Confirmed" },
-  { key: "cancelled", label: "Cancelled" },
+const STAGES = [
   { key: "all", label: "All" },
-];
+  { key: "curator_review", label: "Curator review" },
+  { key: "needs_changes", label: "Needs changes" },
+  { key: "awaiting_supplier", label: "Awaiting supplier" },
+  { key: "awaiting_payment", label: "Awaiting payment" },
+  { key: "confirmed", label: "Confirmed" },
+  { key: "rejected", label: "Rejected" },
+] as const;
+
+const STAGE_STYLES: Record<string, string> = {
+  curator_review: "bg-amber-100 text-amber-700",
+  needs_changes: "bg-orange-100 text-orange-700",
+  awaiting_supplier: "bg-sky-100 text-sky-700",
+  awaiting_payment: "bg-violet-100 text-violet-700",
+  confirmed: "bg-emerald-100 text-emerald-700",
+  rejected: "bg-muted text-muted-foreground",
+};
+
+export function StageBadge({ stage }: { stage: string }) {
+  const label = stage.replace(/_/g, " ");
+  return (
+    <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${STAGE_STYLES[stage] ?? "bg-muted text-muted-foreground"}`}>
+      {label}
+    </span>
+  );
+}
 
 function ReservationsPage() {
-  const qc = useQueryClient();
-  const [filter, setFilter] = useState<(typeof FILTERS)[number]["key"]>("pending");
+  const [stage, setStage] = useState<(typeof STAGES)[number]["key"]>("curator_review");
+  const [search, setSearch] = useState("");
 
-  const { data: reservations = [], isLoading } = useQuery({
-    queryKey: ["reservations", filter],
+  const { data: rows = [], isLoading } = useQuery({
+    queryKey: ["reservations-list", stage],
     queryFn: async () => {
       let q = supabase
         .from("group_buy_reservations")
-        .select("id,listing_id,buyer_id,quantity,status,notes,created_at,listings(id,code,moq,products(id,name,internal_code))")
+        .select(
+          "id,reservation_number,listing_id,buyer_id,quantity,status,workflow_stage,reservation_type,size_selection,colour_id,notes,curator_notes,created_at," +
+            "colour:product_colours(name)," +
+            "listings(id,code,moq,products(id,name,internal_code))," +
+            "buyer_profile:buyer_profiles(business_name,contact_name,country)"
+        )
         .order("created_at", { ascending: false })
-        .limit(200);
-      if (filter !== "all") q = q.eq("status", filter);
+        .limit(300);
+      if (stage !== "all") q = q.eq("workflow_stage", stage);
       const { data, error } = await q;
       if (error) throw error;
       return (data ?? []) as unknown as Reservation[];
     },
   });
 
-  const update = useMutation({
-    mutationFn: async ({ r, status }: { r: Reservation; status: Reservation["status"] }) => {
-      const { error } = await supabase.from("group_buy_reservations").update({ status }).eq("id", r.id);
-      if (error) throw error;
-      await logAudit({
-        module: "reservations",
-        action: "status_change",
-        entityType: "group_buy_reservation",
-        entityId: r.id,
-        previous: { status: r.status },
-        next: { status },
-      });
-    },
-    onSuccess: () => {
-      toast.success("Updated");
-      qc.invalidateQueries({ queryKey: ["reservations"] });
-      qc.invalidateQueries({ queryKey: ["dashboard-stats"] });
-    },
-    onError: (e) => toast.error((e as Error).message),
-  });
-
-  // Group by listing to show group-buy progress vs MOQ
-  const groups = new Map<string, { name: string; code: string; moq: number | null; productCode: string; items: Reservation[] }>();
-  for (const r of reservations) {
-    const key = r.listing_id;
-    const existing = groups.get(key);
-    if (existing) {
-      existing.items.push(r);
-    } else {
-      groups.set(key, {
-        name: r.listings?.products?.name ?? "Unknown product",
-        code: r.listings?.code ?? "",
-        moq: r.listings?.moq ?? null,
-        productCode: r.listings?.products?.internal_code ?? "",
-        items: [r],
-      });
-    }
-  }
+  const filtered = useMemo(() => {
+    const s = search.trim().toLowerCase();
+    if (!s) return rows;
+    return rows.filter((r) =>
+      [
+        r.reservation_number,
+        r.listings?.products?.name,
+        r.listings?.products?.internal_code,
+        r.listings?.code,
+        r.buyer_profile?.business_name,
+        r.buyer_profile?.contact_name,
+        r.buyer_profile?.country,
+      ]
+        .filter(Boolean)
+        .some((v) => (v as string).toLowerCase().includes(s))
+    );
+  }, [rows, search]);
 
   return (
     <AppShell title="Reservations">
-      <div className="mb-4 flex flex-wrap gap-2">
-        {FILTERS.map((f) => (
+      <p className="mb-4 text-sm text-muted-foreground">
+        Operational inbox for every buyer reservation. Approve, request changes or reject at each stage.
+      </p>
+
+      <div className="mb-3 flex items-center gap-2">
+        <div className="relative flex-1">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search R-, product, buyer, country…"
+            className="w-full rounded-lg border border-input bg-background py-2 pl-9 pr-3 text-sm"
+          />
+        </div>
+      </div>
+
+      <div className="mb-4 flex flex-wrap gap-1.5">
+        {STAGES.map((f) => (
           <button
             key={f.key}
-            onClick={() => setFilter(f.key)}
-            className={`rounded-full px-3 py-1.5 text-xs font-medium ${filter === f.key ? "bg-foreground text-background" : "border border-border text-muted-foreground hover:bg-muted"}`}
+            onClick={() => setStage(f.key)}
+            className={`rounded-full px-3 py-1 text-[11px] font-medium ${stage === f.key ? "bg-foreground text-background" : "border border-border text-muted-foreground hover:bg-muted"}`}
           >
             {f.label}
           </button>
@@ -107,90 +134,49 @@ function ReservationsPage() {
 
       {isLoading ? (
         <div className="text-sm text-muted-foreground">Loading…</div>
-      ) : reservations.length === 0 ? (
+      ) : filtered.length === 0 ? (
         <div className="rounded-2xl border border-border bg-card p-8 text-center text-sm text-muted-foreground">
-          No reservations in this view.
+          No reservations match this view.
         </div>
       ) : (
-        <div className="space-y-4">
-          {[...groups.entries()].map(([listingId, g]) => {
-            const totalActive = g.items
-              .filter((r) => r.status === "pending" || r.status === "confirmed")
-              .reduce((sum, r) => sum + r.quantity, 0);
-            const pct = g.moq ? Math.min(100, Math.round((totalActive / g.moq) * 100)) : 0;
-            return (
-              <div key={listingId} className="rounded-2xl border border-border bg-card p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{g.productCode} · {g.code}</div>
-                    <Link to="/products/$productId" params={{ productId: g.items[0].listings?.products?.id ?? "" }} className="font-semibold hover:underline">
-                      {g.name}
-                    </Link>
-                  </div>
-                  {g.moq ? (
-                    <div className="text-right text-xs">
-                      <div className="font-medium text-foreground">{totalActive} / {g.moq}</div>
-                      <div className="text-muted-foreground">{pct}% of MOQ</div>
+        <ul className="space-y-2">
+          {filtered.map((r) => (
+            <li key={r.id}>
+              <Link
+                to="/reservations/$reservationId"
+                params={{ reservationId: r.id }}
+                className="block rounded-2xl border border-border bg-card p-4 hover:border-foreground/30"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">{r.reservation_number}</span>
+                      <StageBadge stage={r.workflow_stage} />
+                      <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+                        {r.reservation_type === "full_moq" ? "Full MOQ" : "Group buy"}
+                      </span>
                     </div>
-                  ) : (
-                    <div className="text-xs text-muted-foreground">No MOQ set</div>
-                  )}
-                </div>
-                {g.moq && (
-                  <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-muted">
-                    <div className="h-full bg-foreground transition-all" style={{ width: `${pct}%` }} />
-                  </div>
-                )}
-                <div className="mt-3 divide-y divide-border">
-                  {g.items.map((r) => (
-                    <div key={r.id} className="flex items-center justify-between gap-3 py-3">
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-2 text-xs font-medium">
-                          <StatusBadge status={r.status} />
-                          <span className="text-foreground">Qty {r.quantity}</span>
-                          <span className="text-muted-foreground">· buyer {r.buyer_id.slice(0, 8)}</span>
-                        </div>
-                        <div className="text-[11px] text-muted-foreground">{new Date(r.created_at).toLocaleString()}</div>
-                        {r.notes && <div className="mt-1 truncate text-[11px] italic text-muted-foreground">"{r.notes}"</div>}
-                      </div>
-                      <div className="flex shrink-0 gap-1">
-                        {r.status !== "confirmed" && (
-                          <AppButton size="sm" onClick={() => update.mutate({ r, status: "confirmed" })} disabled={update.isPending}>
-                            <Check className="mr-1 h-3.5 w-3.5" /> Confirm
-                          </AppButton>
-                        )}
-                        {r.status !== "cancelled" && (
-                          <button
-                            onClick={() => update.mutate({ r, status: "cancelled" })}
-                            className="inline-flex items-center gap-1 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
-                          >
-                            <X className="h-3.5 w-3.5" /> Decline
-                          </button>
-                        )}
-                      </div>
+                    <div className="mt-1 truncate font-semibold text-foreground">
+                      {r.listings?.products?.name ?? "Unknown product"}
                     </div>
-                  ))}
+                    <div className="text-[11px] text-muted-foreground">
+                      {r.listings?.products?.internal_code ?? ""} · {r.listings?.code ?? ""} · Qty {r.quantity}
+                      {r.colour?.name ? ` · ${r.colour.name}` : ""}
+                      {r.size_selection ? ` · Sizes ${r.size_selection}` : ""}
+                    </div>
+                    <div className="mt-1 text-[11px] text-muted-foreground">
+                      {r.buyer_profile?.business_name ?? r.buyer_profile?.contact_name ?? `Buyer ${r.buyer_id.slice(0, 8)}`}
+                      {r.buyer_profile?.country ? ` · ${r.buyer_profile.country}` : ""}
+                      {" · "}{formatRelative(r.created_at)}
+                    </div>
+                  </div>
+                  <ChevronRight className="mt-1 h-4 w-4 shrink-0 text-muted-foreground" />
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              </Link>
+            </li>
+          ))}
+        </ul>
       )}
     </AppShell>
-  );
-}
-
-function StatusBadge({ status }: { status: Reservation["status"] }) {
-  const map: Record<Reservation["status"], { c: string; icon: React.ReactNode; label: string }> = {
-    pending: { c: "bg-amber-100 text-amber-700", icon: <Clock className="h-3 w-3" />, label: "Pending" },
-    confirmed: { c: "bg-emerald-100 text-emerald-700", icon: <Check className="h-3 w-3" />, label: "Confirmed" },
-    cancelled: { c: "bg-muted text-muted-foreground", icon: <X className="h-3 w-3" />, label: "Cancelled" },
-    
-  };
-  const m = map[status];
-  return (
-    <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${m.c}`}>
-      {m.icon} {m.label}
-    </span>
   );
 }

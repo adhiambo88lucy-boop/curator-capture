@@ -13,6 +13,7 @@ import {
   Flame,
   UploadCloud,
   ChevronRight,
+  PlayCircle,
 } from "lucide-react";
 import type { ReactNode } from "react";
 
@@ -41,11 +42,12 @@ function ActionCenter() {
         staleExchangeRates,
         gbEndingToday,
         awaitingPublish,
+        sessionsToReview,
       ] = await Promise.all([
         supabase
           .from("group_buy_reservations")
-          .select("id,quantity,status,created_at,listing:listings(id,product:products(id,name,internal_code))")
-          .eq("status", "pending")
+          .select("id,reservation_number,quantity,workflow_stage,created_at,listing:listings(id,product:products(id,name,internal_code))")
+          .eq("workflow_stage", "curator_review")
           .order("created_at", { ascending: false })
           .limit(10),
         supabase
@@ -87,6 +89,13 @@ function ActionCenter() {
           .select("id,code,product:products(id,name,internal_code)")
           .eq("publish_status", "draft")
           .limit(10),
+        supabase
+          .from("capture_sessions")
+          .select("id,started_at,supplier:suppliers(name)")
+          .eq("status", "active")
+          .lt("started_at", new Date(now.getTime() - 24 * 3_600_000).toISOString())
+          .order("started_at", { ascending: false })
+          .limit(10),
       ]);
 
       return {
@@ -100,6 +109,7 @@ function ActionCenter() {
         staleExchangeRates: staleExchangeRates.data ?? [],
         gbEndingToday: gbEndingToday.data ?? [],
         awaitingPublish: awaitingPublish.data ?? [],
+        sessionsToReview: sessionsToReview.data ?? [],
       };
     },
     staleTime: 20_000,
@@ -120,8 +130,9 @@ function ActionCenter() {
           {data?.pendingReservations.map((r) => (
             <Row
               key={r.id}
-              to="/reservations"
-              label={`${r.listing?.product?.internal_code ?? ""} · ${r.listing?.product?.name ?? "Unknown product"}`}
+              to="/reservations/$reservationId"
+              params={{ reservationId: r.id }}
+              label={`${r.reservation_number ?? ""} · ${r.listing?.product?.name ?? "Unknown product"}`}
               meta={`${r.quantity} units · placed ${formatRelative(r.created_at)}`}
             />
           ))}
@@ -233,6 +244,22 @@ function ActionCenter() {
               params={{ productId: l.product?.id ?? "" }}
               label={`${l.code} · ${l.product?.name ?? ""}`}
               meta="Currently in draft"
+            />
+          ))}
+        </ActionGroup>
+
+        <ActionGroup
+          icon={<PlayCircle className="h-4 w-4" />}
+          title="Capture sessions to review"
+          count={data?.sessionsToReview.length}
+        >
+          {data?.sessionsToReview.map((s) => (
+            <Row
+              key={s.id}
+              to="/sessions/$sessionId/review"
+              params={{ sessionId: s.id }}
+              label={s.supplier?.name ?? "Unknown supplier"}
+              meta={`Started ${formatRelative(s.started_at)}`}
             />
           ))}
         </ActionGroup>

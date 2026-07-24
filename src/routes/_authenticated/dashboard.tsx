@@ -25,7 +25,7 @@ function DashboardPage() {
         await Promise.all([
           supabase.from("products").select("id", { count: "exact", head: true }).gte("created_at", today),
           supabase.from("capture_sessions").select("id,supplier_id", { count: "exact" }).eq("status", "active"),
-          supabase.from("group_buy_reservations").select("id", { count: "exact", head: true }).eq("status", "pending"),
+          supabase.from("group_buy_reservations").select("id", { count: "exact", head: true }).eq("workflow_stage", "curator_review"),
           supabase.from("capture_sessions").select("supplier_id").gte("started_at", today),
           supabase
             .from("products")
