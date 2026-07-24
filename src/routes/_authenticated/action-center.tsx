@@ -247,6 +247,22 @@ function ActionCenter() {
             />
           ))}
         </ActionGroup>
+
+        <ActionGroup
+          icon={<PlayCircle className="h-4 w-4" />}
+          title="Capture sessions to review"
+          count={data?.sessionsToReview.length}
+        >
+          {data?.sessionsToReview.map((s) => (
+            <Row
+              key={s.id}
+              to="/sessions/$sessionId/review"
+              params={{ sessionId: s.id }}
+              label={s.supplier?.name ?? "Unknown supplier"}
+              meta={`Started ${formatRelative(s.started_at)}`}
+            />
+          ))}
+        </ActionGroup>
       </div>
     </AppShell>
   );
