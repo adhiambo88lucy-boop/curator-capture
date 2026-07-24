@@ -21,6 +21,7 @@ import { Route as AuthenticatedSuppliersRouteImport } from './routes/_authentica
 import { Route as AuthenticatedSessionsRouteImport } from './routes/_authenticated/sessions'
 import { Route as AuthenticatedReservationsRouteImport } from './routes/_authenticated/reservations'
 import { Route as AuthenticatedProductsRouteImport } from './routes/_authenticated/products'
+import { Route as AuthenticatedGroupBuysRouteImport } from './routes/_authenticated/group-buys'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedActionCenterRouteImport } from './routes/_authenticated/action-center'
 import { Route as AuthenticatedBusinessIndexRouteImport } from './routes/_authenticated/business/index'
@@ -96,6 +97,11 @@ const AuthenticatedReservationsRoute =
 const AuthenticatedProductsRoute = AuthenticatedProductsRouteImport.update({
   id: '/products',
   path: '/products',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedGroupBuysRoute = AuthenticatedGroupBuysRouteImport.update({
+  id: '/group-buys',
+  path: '/group-buys',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
@@ -199,6 +205,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/action-center': typeof AuthenticatedActionCenterRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/group-buys': typeof AuthenticatedGroupBuysRoute
   '/products': typeof AuthenticatedProductsRouteWithChildren
   '/reservations': typeof AuthenticatedReservationsRouteWithChildren
   '/sessions': typeof AuthenticatedSessionsRouteWithChildren
@@ -227,6 +234,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/action-center': typeof AuthenticatedActionCenterRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/group-buys': typeof AuthenticatedGroupBuysRoute
   '/products': typeof AuthenticatedProductsRouteWithChildren
   '/reservations': typeof AuthenticatedReservationsRouteWithChildren
   '/sessions': typeof AuthenticatedSessionsRouteWithChildren
@@ -258,6 +266,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/_authenticated/action-center': typeof AuthenticatedActionCenterRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/group-buys': typeof AuthenticatedGroupBuysRoute
   '/_authenticated/products': typeof AuthenticatedProductsRouteWithChildren
   '/_authenticated/reservations': typeof AuthenticatedReservationsRouteWithChildren
   '/_authenticated/sessions': typeof AuthenticatedSessionsRouteWithChildren
@@ -289,6 +298,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/action-center'
     | '/dashboard'
+    | '/group-buys'
     | '/products'
     | '/reservations'
     | '/sessions'
@@ -317,6 +327,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/action-center'
     | '/dashboard'
+    | '/group-buys'
     | '/products'
     | '/reservations'
     | '/sessions'
@@ -347,6 +358,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/_authenticated/action-center'
     | '/_authenticated/dashboard'
+    | '/_authenticated/group-buys'
     | '/_authenticated/products'
     | '/_authenticated/reservations'
     | '/_authenticated/sessions'
@@ -462,6 +474,13 @@ declare module '@tanstack/react-router' {
       path: '/products'
       fullPath: '/products'
       preLoaderRoute: typeof AuthenticatedProductsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/group-buys': {
+      id: '/_authenticated/group-buys'
+      path: '/group-buys'
+      fullPath: '/group-buys'
+      preLoaderRoute: typeof AuthenticatedGroupBuysRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard': {
@@ -642,6 +661,7 @@ const AuthenticatedSessionsRouteWithChildren =
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedActionCenterRoute: typeof AuthenticatedActionCenterRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedGroupBuysRoute: typeof AuthenticatedGroupBuysRoute
   AuthenticatedProductsRoute: typeof AuthenticatedProductsRouteWithChildren
   AuthenticatedReservationsRoute: typeof AuthenticatedReservationsRouteWithChildren
   AuthenticatedSessionsRoute: typeof AuthenticatedSessionsRouteWithChildren
@@ -659,6 +679,7 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedActionCenterRoute: AuthenticatedActionCenterRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedGroupBuysRoute: AuthenticatedGroupBuysRoute,
   AuthenticatedProductsRoute: AuthenticatedProductsRouteWithChildren,
   AuthenticatedReservationsRoute: AuthenticatedReservationsRouteWithChildren,
   AuthenticatedSessionsRoute: AuthenticatedSessionsRouteWithChildren,
