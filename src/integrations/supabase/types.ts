@@ -215,6 +215,7 @@ export type Database = {
           active: boolean
           code: string
           created_at: string
+          is_default: boolean
           name: string
           symbol: string
           updated_at: string
@@ -223,6 +224,7 @@ export type Database = {
           active?: boolean
           code: string
           created_at?: string
+          is_default?: boolean
           name: string
           symbol: string
           updated_at?: string
@@ -231,6 +233,7 @@ export type Database = {
           active?: boolean
           code?: string
           created_at?: string
+          is_default?: boolean
           name?: string
           symbol?: string
           updated_at?: string
@@ -310,35 +313,60 @@ export type Database = {
       group_buy_reservations: {
         Row: {
           buyer_id: string
+          colour_id: string | null
           created_at: string
+          curator_notes: string | null
           id: string
           listing_id: string
           notes: string | null
           quantity: number
+          reservation_number: string
+          reservation_type: string
+          size_selection: string | null
           status: Database["public"]["Enums"]["reservation_status"]
           updated_at: string
+          workflow_stage: string
         }
         Insert: {
           buyer_id: string
+          colour_id?: string | null
           created_at?: string
+          curator_notes?: string | null
           id?: string
           listing_id: string
           notes?: string | null
           quantity: number
+          reservation_number?: string
+          reservation_type?: string
+          size_selection?: string | null
           status?: Database["public"]["Enums"]["reservation_status"]
           updated_at?: string
+          workflow_stage?: string
         }
         Update: {
           buyer_id?: string
+          colour_id?: string | null
           created_at?: string
+          curator_notes?: string | null
           id?: string
           listing_id?: string
           notes?: string | null
           quantity?: number
+          reservation_number?: string
+          reservation_type?: string
+          size_selection?: string | null
           status?: Database["public"]["Enums"]["reservation_status"]
           updated_at?: string
+          workflow_stage?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "group_buy_reservations_colour_id_fkey"
+            columns: ["colour_id"]
+            isOneToOne: false
+            referencedRelation: "product_colours"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "group_buy_reservations_listing_id_fkey"
             columns: ["listing_id"]
