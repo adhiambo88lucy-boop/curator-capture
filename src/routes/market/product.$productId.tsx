@@ -224,7 +224,7 @@ function ProductDetail() {
                   onChange={(e) => setReserveQty(e.target.value)}
                   className="w-24 rounded-lg border border-input bg-background px-3 py-2 text-sm"
                 />
-                <AppButton className="flex-1" onClick={() => reserve.mutate()} disabled={reserve.isPending || !signedInUser}>
+                <AppButton className="flex-1" onClick={() => reserve.mutate("group_buy")} disabled={reserve.isPending || !signedInUser}>
                   {signedInUser ? "Reserve" : <Link to="/market/auth">Sign in to reserve</Link>}
                 </AppButton>
               </div>
@@ -233,7 +233,7 @@ function ProductDetail() {
 
           <div className="mt-4 flex gap-2">
             {listing && (
-              <AppButton variant="outline" className="flex-1" disabled>
+              <AppButton variant="outline" className="flex-1" onClick={() => reserve.mutate("full_moq")} disabled={reserve.isPending || !signedInUser || !listing.moq}>
                 Order Full MOQ ({listing.moq ?? "—"})
               </AppButton>
             )}
