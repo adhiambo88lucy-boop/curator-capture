@@ -97,20 +97,24 @@ function ProductDetail() {
   });
 
   const reserve = useMutation({
-    mutationFn: async () => {
+    mutationFn: async (type: "group_buy" | "full_moq") => {
       if (!signedInUser) throw new Error("Sign in to reserve");
       if (!listing) throw new Error("No active listing");
-      const qty = Number(reserveQty);
+      const qty = type === "full_moq" ? (listing.moq ?? 1) : Number(reserveQty);
       if (!Number.isFinite(qty) || qty <= 0) throw new Error("Enter a valid quantity");
       const { error } = await supabase.from("group_buy_reservations").insert({
         listing_id: listing.id,
         buyer_id: signedInUser,
         quantity: qty,
+        reservation_type: type,
+        colour_id: activeColourId,
+        workflow_stage: "curator_review",
+        status: "pending",
       });
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success("Reservation placed");
+      toast.success("Reservation placed — the curator team will review it shortly.");
       qc.invalidateQueries({ queryKey: ["gb-progress", listing?.id] });
     },
     onError: (e) => toast.error((e as Error).message),
